@@ -1,6 +1,3 @@
-# zombieApp
-
-```mermaid
 sequenceDiagram
     User->>Game Select: Push join game button
     Game Select->>Nickname Select: Enter Game ID
@@ -9,4 +6,3 @@ sequenceDiagram
     Nickname Select->>Game: Enter Nickname
     Game->>Game: Play
     Game->> Game Select: Finished playing/Logout
-```
