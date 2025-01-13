@@ -1,5 +1,7 @@
 sequenceDiagram
+    User->>Game Select: Push create game button
     User->>Game Select: Push join game button
+    Game Select->>Game Select: Generate code/link
     Game Select->>Nickname Select: Enter Game ID
     User->>Nickname Select: Clicked link with game code
     Nickname Select->>Nickname Select: Nickname in local storage
