@@ -34,6 +34,7 @@ Technologies
     - WebSocket: Realtime updates of player infection status
 
 HTML deliverables
+    
     -HTML Pages: I made my index page along with the pages necessary for playing through a game (creat_game. enter_joincode, waitingroom, and game_running are the page names)
     
     -Links Between Pages: The index page contains links to wither the creat_game page or the enter_joincode page and both those pages are linked to the waitroom page which is linked to the game_running page where the game actually takes place.
