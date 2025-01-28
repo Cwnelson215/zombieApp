@@ -40,7 +40,7 @@ HTML deliverables
 - [x] 3rd party: images over players names are representations of implemenation of gravatar 3rd part for avatar generation. Implemenation of gravatar is represented through the Use Gravatar button on the enter_joincode and create_game pages
 - [x] Text: Each page has text explainig what to do and what inputs are being asked for, buttons are all labled as well
 - [x] Images: avatar images used in waitroom and game_running above players nicknames
-- [x] Login Placeholder: Generation of game code when creating a game on creat_game page and the entering of game code as an input in the enter_gamecode page represent logging into specific games with nicknames chosen every game.
+- [x] Login Placeholder: Generation of game code when creating a game on creat_game page and the entering of game code as an input in the enter_gamecode page represent logging into specific games with nicknames chosen every game. Nicknames are user names being displayed in the waitingroom and game_running pages.
 - [x] Database Placeholder: The number of players in the waitroom page and number of infected and survivors in the game_running page represent data pulled from a database
 - [x] Websocket Placeholder: The broadcasting of a message if your infected using the Announce Infection button on the game_running page represents the realtime announcment of infections
 
