@@ -1,0 +1,90 @@
+@font-face {
+    font-family: 'zombie';
+    src: url(fonts/zombie.otf) format("opentype")
+}
+.bebas-neue-regular {
+    font-family: "Bebas Neue", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+
+* {
+    font-family: 'Bebas Neue';
+    background-color: rgb(40, 43, 43);
+}
+
+body {
+
+    flex-direction: column;
+    min-width: 375px;
+}
+
+header {
+    flex: 0 80px;
+    background-image: url(images/header.jpg);
+    border: 2px solid black;
+    height: 250px;
+}
+
+.title {
+    font-size: 190px;
+    color:rgb(136, 8, 8);
+    text-align: center;
+    background-color: transparent;
+    font-family: 'zombie';
+}
+
+main {
+    padding: 2em;
+    background-color: rgb(40, 43, 43);
+    height: 770px;
+    border: 2px solid black;
+}
+
+.introduction {
+    color:rgb(238, 210, 2);
+    font-size: 40px;
+    text-align: center;
+    padding: 1em;
+}
+
+.question {
+    color: rgb(173, 162, 162);
+    font-size: 60px;
+    text-align: center;
+    padding: 0.2em
+}
+
+.invitation {
+    color: rgb(173, 162, 162);
+    font-size: 35px;
+    text-align: center;
+    padding: 0.5em;
+}
+
+.host {
+    padding: 5px;
+    text-align: center;
+    color: yellow;
+}
+
+.join{
+    padding: 10px;
+    text-align: center;
+
+}
+
+.warning {
+    text-align: center;
+    color:rgb(136, 8, 8);
+    font-family: "zombie";
+    font-size: 150px;
+}
+
+footer {
+    background-color:rgb(73, 17, 17);
+    color: white;
+    padding: 1em;
+}
