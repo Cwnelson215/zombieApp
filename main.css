@@ -47,7 +47,7 @@ main {
     color:rgb(238, 210, 2);
     font-size: 40px;
     text-align: center;
-    padding: 1em;
+    padding: 0.5em;
 }
 
 .question {
@@ -61,13 +61,20 @@ main {
     color: rgb(173, 162, 162);
     font-size: 35px;
     text-align: center;
-    padding: 0.5em;
 }
 
 .host {
-    padding: 5px;
     text-align: center;
-    color: yellow;
+}
+
+.h_button{
+    color: rgb(136, 8, 8);
+    font-size: 3em;
+    transition-duration: 0.4s;
+}
+
+.h_button:hover {
+    background-color: rgb(238, 210, 2);
 }
 
 .join{
@@ -76,15 +83,41 @@ main {
 
 }
 
+.j_button{
+    color: rgb(136, 8, 8);
+    font-size: 3em;
+    transition-duration: 0.4s;
+}
+
+.j_button:hover {
+    background-color: rgb(238, 210, 2);
+}
+
 .warning {
     text-align: center;
     color:rgb(136, 8, 8);
     font-family: "zombie";
     font-size: 150px;
+    animation: beware 5s ease-in-out infinite;
 }
 
 footer {
     background-color:rgb(73, 17, 17);
     color: white;
     padding: 1em;
+}
+
+@keyframes beware {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+   
 }
