@@ -1,0 +1,105 @@
+@font-face {
+    font-family: 'zombie';
+    src: url(fonts/zombie.otf) format("opentype")
+}
+.bebas-neue-regular {
+    font-family: "Bebas Neue", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+
+* {
+    font-family: 'Bebas Neue';
+    background-color: rgb(136, 8, 8);
+}
+
+header {
+    flex: 0 80px;
+    border: 2px solid black;
+    height: 150px;
+    background-color: rgb(40, 43, 43);
+}
+
+.title {
+    font-family: 'zombie';
+    color: rgb(136, 8, 8);
+    background-color: rgb(40, 43, 43);
+    text-align: center;
+    padding: 20px;
+    font-size: 150px;
+}
+
+main{
+    padding: 8em;
+    height: 770px;
+    border: 2px solid rgb(0, 0, 0)
+}
+
+.check_box {
+    font-size: 25px;
+    text-align: center;
+}
+
+.check_box p {
+    font-size: 60px;
+}
+
+.check_box label {
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.check_box input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.check_box label:hover {
+    color: rgb(238, 210, 2)
+}
+
+.generate {
+    text-align: center;
+    font-size: 60px;
+}
+
+.button {
+    text-align: center;
+    font-size: 40px;
+    transition-duration: 0.4s;
+}
+
+.button input[type="button"]:hover {
+    background-color: rgb(238, 210, 2);
+}
+
+.nickname {
+    text-align: center;
+    padding: 2em;
+}
+
+.nickname p {
+    font-size: 60px;
+}
+
+.nickname label {
+    font-size: 50px;
+}
+
+
+footer {
+    text-align: center;
+    padding: 2em;
+    background-color: rgb(40, 43, 43);
+    height: 159px;
+}
+
+.start {
+    font-size: 55px;
+    transition-duration: 0.4s;
+}
+
+.start:hover {
+    background-color: rgb(238, 210, 2);
+}
