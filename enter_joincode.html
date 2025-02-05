@@ -1,23 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="favicon.ico" />
+
+        <link rel ="stylesheet" href="enter_joincode.css" />
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        </style>
+    </head>
     <body>
         <header>
-            <h1>Enter A Join Code To Play</h1>
-            <hr />
+            <p class="heading">Enter A Join Code To Play</p>
         </header>
         <main>
-            <label name="code">Enter Join Code:</label><br>
-            <input type="text" id="code" name="code"><br>
+            <div class="code">
+                <label name="code">Enter Join Code:</label><br>
+                <input type="text" id="code" name="code"><br>
+            </div>
+            
+            <p class="nickname">Choose Your Nickname</p>
 
-            <h2>Choose Your Nickname</h2>
-            <label for="Nickname">Enter Nickname:</label><br>
-            <input type="text" id="Nickname" name="Nickname"><br>
-
-            <input type="button" value="Use Gravatar">
-            <hr />
+            <div class="nickname_input">
+                <label for="Nickname">Enter Nickname:</label><br>
+                <input type="text" id="Nickname" name="Nickname"><br>
+            </div>
+            <div class="button">
+                <input type="button" value="Use Gravatar">
+            </div>
         </main>
         <footer>
-            <button onclick="location.href='waitroom.html'">Join Game</button>
+            <div class="join">
+                <button onclick="location.href='waitroom.html'">Join Game</button>
+            </div>
         </footer>
     </body>
 </html>

@@ -6,7 +6,7 @@
     font-family: "Bebas Neue", serif;
     font-weight: 400;
     font-style: normal;
-}
+  }
 
 
 
@@ -29,12 +29,18 @@ header {
     text-align: center;
     padding: 20px;
     font-size: 150px;
+    margin-top: -35px;
 }
 
 main{
     padding: 8em;
     height: 770px;
-    border: 2px solid rgb(0, 0, 0)
+    border: 5px solid rgb(0, 0, 0)
+}
+
+.question {
+    text-align: center;
+    font-size: 60px;
 }
 
 .check_box {
