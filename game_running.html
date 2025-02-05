@@ -1,28 +1,53 @@
 <!DOCTYPE html>
 <html lang="eng">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="favicon.ico" />
+
+        <link rel ="stylesheet" href="game_runnig.css" />
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        </style>
+    </head>
     <body>
         <header>
-           <h1>Time Remaining:</h1>
+           <p class="timer">Time Remaining:</p>
             <img alt="timer" src="images/timer.png" />
-            <hr />
         </header>
         <main>
-            <h2>Infected: 1</h2>
-            <img alt="player avater" src="images/pic2.jpeg" />
-            <p class="player">Kalvin Koolidge</p>
+            <p class="i_count">Infected: 1</p>
+            <div class="infected">
+                <img alt="player avater" src="images/pic2.jpeg" />
+                <p class="player">Kalvin Koolidge</p>
+            </div>
+            <p class="s_count">Survivors Left: 2</p class="s_count">
+            <div class="survivors">
+                <div class="survivor1">
+                    <img alt="player avater" src="images/pic3.jpeg" />
+                    <p class="player"><strong>Lebron James</strong></p>
+                </div>
+                <div class="survivor2">
+                    <img alt="player avater" src="images/pic1.jpeg" />
+                    <p class="player">Bart Simpson</p>
+                </div>
+            </div>
 
-            <h3>Survivors Left: 2</h3>
-            <img alt="player avater" src="images/pic3.jpeg" />
-            <p class="player"><strong>Lebron James</strong></p>
-            <img alt="player avater" src="images/pic1.jpeg" />
-            <p class="player">Bart Simpson</p>
-
-            <h4>Push If Infected</h4>
-            <button onclick="alert('Lebron James has been infected')">Announce Infection</button>
-            <hr />
+            <div class="announce">
+                <p class="announcement">Push If Infected</p>
+                <button class="button" onclick="alert('Lebron James has been infected')">Announce Infection</button>
+            </div>
         </main>
         <footer>
-            <button onclick="location.href='index.html'">End Game</button>
+            <button class="end" onclick="location.href='index.html'">End Game</button>
         </footer>
     </body>
 </html>
