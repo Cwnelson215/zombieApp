@@ -1,26 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="favicon.ico" />
+
+        <link rel ="stylesheet" href="waitroom.css" />
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        </style>
+    </head>
     <body>
         <header>
-            <h1>Welcome to the Waiting Room!</h1>
+            <p class="welcome">Welcome to the Waiting Room!</p>
             <p class="introduction">Waiting for players...</p>
-            <hr />
         </header>
         <main>
-            <h2>Players Joined: 3</h2>
-            <h3>Players Ready:</h3>
-            <img alt="player avater" src="images/pic3.jpeg" />
-            <p class="player"><strong>Labron James</strong></p>
-            <img alt="timer" src="images/pic2.jpeg" />
-            <p class="player">Kalvin Koolidge</p>
-            <img alt="player avater" src="images/pic1.jpeg" />
-            <p class="player">Bart Simpson</p>
-            <hr />
+            <p class="total_joined">Players Joined: 3</p>
+            <p class="ready">Players Ready:</p>
+            <div class="container">
+                <div class="player1">
+                    <img alt="player avater" src="images/pic3.jpeg">
+                    <p class="player"><strong>Labron James</strong></p>
+                </div>
+                <div class="player2">
+                    <img alt="timer" src="images/pic2.jpeg">
+                    <p class="player">Kalvin Koolidge</p>
+                </div>
+                <div class="player3">
+                    <img alt="player avater" src="images/pic1.jpeg">
+                    <p class="player">Bart Simpson</p>
+                </div>
+            </div>
+            <p class="info"><strong>The Infected Player Will Be Chosen When The Game Starts</strong></p>
         </main>
         <footer>
-            <p class="info"><strong>The Infected Player Will Be Chosen When The Game Starts</strong></p>
-            <button onclick="location.href='game_running.html'">Begin Infection</button>
-            <h3>Good Luck Survivors</h3>
+            <button class="start" onclick="location.href='game_running.html'">Begin Infection</button>
+            <p class="message">Good Luck Survivors</p>
         </footer>
     </body>
 </html>

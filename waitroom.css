@@ -1,0 +1,115 @@
+@font-face {
+    font-family: 'zombie';
+    src: url(fonts/zombie.otf) format("opentype")
+}
+.bebas-neue-regular {
+    font-family: "Bebas Neue", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+* {
+    font-family: 'Bebas Neue';
+}
+
+header {
+    background-image: url(images/header.jpg);
+    height: 247px;
+}
+
+.welcome{
+    background-color: transparent;
+    font-family: 'zombie';
+    font-size: 125px;
+    text-align: center;
+    color: rgb(238, 210, 2);
+}
+
+.introduction {
+    color: rgb(238, 210, 2);
+    font-size: 35px;
+    background-color: transparent;
+}
+
+main{
+    background-color: rgb(40, 43, 43);
+    padding: 1em;
+    height: 650px;
+}
+
+.total_joined {
+    color: rgb(173,162, 162);
+    font-size: 25px;
+}
+
+.ready {
+    color: rgb(173,162, 162);
+    font-size: 100px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.player1 {
+    font-size: 25px;
+    color: rgb(136, 8, 8);
+    text-align: center;
+}
+
+.player1 img {
+    transform: scale(75%);
+}
+
+.player2 {
+    font-size: 25px;
+    color: rgb(238, 210, 2);
+    text-align: center;
+}
+
+.player2 img {
+    transform: scale(75%);
+}
+
+.player3 {
+    font-size: 25px;
+    color: rgb(238, 210, 2);
+    text-align: center;
+}
+
+.player3 img {
+    transform: scale(75%);
+}
+
+.info {
+    color: rgb(173,162, 162);
+    text-align: center;
+    font-size: 50px;
+    background-color: transparent;
+}
+
+footer {
+    background-color: rgb(238, 210, 2);
+    color: rgb(40, 43, 43);
+    height: 182px;
+    text-align: center;
+    padding: 1em; 
+}
+
+.start {
+    background-color: rgb(40, 43, 43);
+    color: rgb(136, 8, 8);
+    font-size: 40px;
+    transition-duration: 0.4s;
+}
+
+.start:hover {
+    background-color: rgb(136, 8, 8);
+    color: rgb(40, 43, 43)
+}
+
+.message {
+    padding: 0.25em;
+    font-size: 50px;
+}
