@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'zombie';
-    src: url(fonts/zombie.otf) format("opentype")
+    src: url(/public/fonts/zombie.otf) format("opentype")
 }
 .bebas-neue-regular {
     font-family: "Bebas Neue", serif;
