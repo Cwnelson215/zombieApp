@@ -12,7 +12,7 @@ export function Enter() {
             <p className="nickname">Choose Your Nickname</p>
 
             <div className="nickname_input">
-                <label for="Nickname">Enter Nickname:</label>
+                <label forhtml="Nickname">Enter Nickname:</label>
                 <input type="text" id="Nickname" name="Nickname"/>
             </div>
             <div className="button">

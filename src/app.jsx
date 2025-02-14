@@ -35,6 +35,11 @@ export default function App() {
                             <button className="s_button">Begin Infection</button>
                     </NavLink>
                 </nav>
+                <nav className="button">
+                    <NavLink to="/">
+                    <button class="end">Title Page</button>
+                    </NavLink>
+                </nav>
             </header>
             <Routes>
                 <Route path='/' element={<Login />} />

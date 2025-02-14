@@ -20,7 +20,7 @@
 
 header {
     flex: 0 80px;
-    background-image: url(images/header.jpg);
+    background-image: url(../public/images/header.jpg);
     border: 2px solid black;
     height: 250px;
     display: flex;

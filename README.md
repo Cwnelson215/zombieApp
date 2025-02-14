@@ -44,4 +44,25 @@ HTML deliverables
 - [x] Database Placeholder: The number of players in the waitroom page and number of infected and survivors in the game_running page represent data pulled from a database
 - [x] Websocket Placeholder: The broadcasting of a message if your infected using the Announce Infection button on the game_running page represents the realtime announcment of infections
 
+CSS deliverables:
 
+- [x] Reviewed, cloned, examined, and deplyed Simon css
+- [x] Created css deliverables for each of my pages and had my name displyed in the footer of the title page along with a link to the github repo.
+- [x] Made several commits to Github for every session I worked on the project
+- [x] Added some notes to my notes.md file
+- [x] Pushed finalized version to my github repo.
+- [x] Successfully deployed my application to my product environment
+- [x] Application is avilable at startup.infect.fyi
+- [x] Uploded url to canvas and turned in assignemnt
+
+ReactP1 deliverables:
+
+- [x] Followed instructions for and successfully ported simoncss to react, then deployed to my production environment simon.infect.fyi
+- [x] Converted my HTML/CSS to use react. Installed Vite, React, and Bootstrap and reorganized my files to the formatting Vite expects. Created a react router to route between each page using button inputs.
+- [x] My name and a link to the github repo are displayed in the footer of each page
+- [x] Made several commits and pushes to github while working on the porject
+- [x] updated notes.md to help remember things i learned
+- [x] Pushed final version onto Github
+- [x] Deloyed to production environment startup.infect.fyi
+- [x] Startup.infect.fyi is publically available
+- [x] Uploaded and submitted url to Canvas
