@@ -9,14 +9,11 @@
   }
 
 
-
 * {
     font-family: 'Bebas Neue';
-    background-color: rgb(40, 43, 43);
 }
 
 .app {
-
     flex-direction: column;
     min-width: 375px;
 }
@@ -26,6 +23,9 @@ header {
     background-image: url(images/header.jpg);
     border: 2px solid black;
     height: 250px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
 }
 
 .title {
@@ -34,6 +34,8 @@ header {
     text-align: center;
     background-color: transparent;
     font-family: 'zombie';
+    margin-left: 0;
+    margin-right: auto;
 }
 
 main {
@@ -63,34 +65,55 @@ main {
     text-align: center;
 }
 
-.host {
-    text-align: center;
-}
-
-.h_button{
-    color: rgb(136, 8, 8);
-    font-size: 3em;
-    transition-duration: 0.4s;
-}
-
-.h_button:hover {
-    background-color: rgb(238, 210, 2);
-}
-
-.join{
+.button{
     padding: 10px;
-    text-align: center;
-
+    text-align: right;
+    justify-content: right;
 }
 
 .j_button{
-    color: rgb(136, 8, 8);
-    font-size: 3em;
+    font-size: 25px;
     transition-duration: 0.4s;
+    color: rgb(238, 210, 2);
+    background-color: rgb(40, 43, 43);
+}
+
+.h_button{
+    text-align: right;
+    font-size: 25px;
+    transition-duration: 0.4s;
+    color: rgb(238, 210, 2);
+    background-color: rgb(40, 43, 43);
+}
+
+.w_button {
+    font-size: 25px;
+    transition-duration: 0.4s;
+    color: rgb(238, 210, 2);
+    background-color: rgb(40, 43, 43);
+}
+
+.s_button{
+    text-align: right;
+    font-size: 25px;
+    transition-duration: 0.4s;
+    color: rgb(238, 210, 2);
+    background-color: rgb(40, 43, 43);
+}
+
+.w_button:hover {
+    background-color: rgb(136, 8, 8);;
+}
+
+.h_button:hover {
+    background-color: rgb(136, 8, 8);;
 }
 
 .j_button:hover {
-    background-color: rgb(238, 210, 2);
+    background-color: rgb(136, 8, 8);;
+}
+.s_button:hover {
+    background-color: rgb(136, 8, 8);
 }
 
 .warning {

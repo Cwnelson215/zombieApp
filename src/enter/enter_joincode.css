@@ -12,39 +12,25 @@
     font-family: 'Bebas Neue';
 }
 
-header {
-    height: 150px;
-    background-color: rgb(238, 210, 2);
-    border: 5px solid black;
-}
-
-.heading{
-    font-size: 115px;
-    text-align: center;
-    color: rgb(136, 8, 8);
-    font-family: "zombie";
-}
-
 main {
     text-align: center;
-    padding: 1em;
     height: 800px;
     background-color: rgb(40, 43, 43);
     color: rgb(238, 210, 2);
 }
 
 .code {
-    padding: 1em;
-    font-size: 50px;
+    margin-top: 175px;
+    font-size: 30px;
 }
 
 .nickname {
-    font-size: 80px;
-    margin-top: 20px;
+    font-size: 30px;
+    margin-top: px;
 }
 
 .nickname_input {
-    font-size: 50px;
+    font-size: 25px;
     margin-bottom: 75px;
 }
 
@@ -63,12 +49,6 @@ main {
     color: rgb(40, 43, 43);
 }
 
-footer{
-    height: 129px;
-    background-color: rgb(238, 210, 2);
-    text-align: center;
-    border: 5px solid black;
-}
 
 .join {
     padding: 0.5em;

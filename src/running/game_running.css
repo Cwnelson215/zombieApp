@@ -12,14 +12,6 @@
     font-family: 'Bebas Neue';
 }
 
-header {
-    background-color: rgb(136, 8, 8);
-    color: rgb(40, 43, 43);
-    text-align: center;
-    font-size: 70px;
-    border: 5px solid black
-}
-
 .timer {
     font-family: "zombie";
 }
@@ -30,8 +22,7 @@ header img {
 }
 
 main {
-    background-color: rgb(238, 210, 2);
-    height: 735px;
+    height: 810px;
 }
 
 .i_count {
@@ -101,16 +92,8 @@ main {
 }
 
 .announce button:hover {
-    background-color: rgb(40, 43, 43);
+    background-color: rgb(238, 210, 2);
     color: rgb(136, 8, 8);
-}
-
-footer {
-    height: 86px;
-    background-color: rgb(40, 43, 43);
-    padding: 1em;
-    text-align: center;
-    border: 5px solid black;
 }
 
 .end {

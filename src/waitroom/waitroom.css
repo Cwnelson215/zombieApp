@@ -12,11 +12,6 @@
     font-family: 'Bebas Neue';
 }
 
-header {
-    background-image: url(images/header.jpg);
-    height: 247px;
-}
-
 .welcome{
     background-color: transparent;
     font-family: 'zombie';
@@ -34,7 +29,8 @@ header {
 main{
     background-color: rgb(40, 43, 43);
     padding: 1em;
-    height: 650px;
+    height: 810px;
+    align-items: center;
 }
 
 .total_joined {
@@ -89,14 +85,6 @@ main{
     background-color: transparent;
 }
 
-footer {
-    background-color: rgb(238, 210, 2);
-    color: rgb(40, 43, 43);
-    height: 182px;
-    text-align: center;
-    padding: 1em; 
-}
-
 .start {
     background-color: rgb(40, 43, 43);
     color: rgb(136, 8, 8);
@@ -112,4 +100,5 @@ footer {
 .message {
     padding: 0.25em;
     font-size: 50px;
+    text-align: center;
 }
