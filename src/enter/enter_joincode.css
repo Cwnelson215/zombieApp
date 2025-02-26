@@ -24,14 +24,35 @@ main {
     font-size: 30px;
 }
 
+.enter {
+    margin-left: 25px;
+    background-color: rgb(238, 210, 2);
+    color: rgb(0, 0, 0);
+    transition-duration: 0.4s;
+    margin-bottom: 50px;
+}
+
+.enter:hover {
+    background-color: rgb(136, 8, 8);
+}
+
 .nickname {
     font-size: 30px;
-    margin-top: px;
 }
 
 .nickname_input {
     font-size: 25px;
     margin-bottom: 75px;
+}
+
+.n_button {
+    margin-left: 25px;
+    background-color: rgb(238, 210, 2);
+    transition-duration: 0.4s;
+}
+
+.n_button:hover {
+    background-color: rgb(136, 8, 8);
 }
 
 .button {
@@ -40,13 +61,13 @@ main {
 
 .button input[type="button"] {
     background-color: rgb(238, 210, 2);
-    color: rgb(40, 43, 43);
+    color: rgb(0, 0, 0);
     transition-duration: 0.4s;
 }
 
 .button input[type="button"]:hover {
     background-color: rgb(136, 8, 8);
-    color: rgb(40, 43, 43);
+    color: rgb(0, 0, 0);
 }
 
 
