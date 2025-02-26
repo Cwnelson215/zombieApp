@@ -66,3 +66,7 @@ ReactP1 deliverables:
 - [x] Deloyed to production environment startup.infect.fyi
 - [x] Startup.infect.fyi is publically available
 - [x] Uploaded and submitted url to Canvas
+
+ReactP2 deliverables:
+
+- [x] 

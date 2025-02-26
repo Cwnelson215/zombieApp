@@ -25,29 +25,46 @@ main{
     font-size: 60px;
 }
 
-.check_box {
+.check_box_Y {
     font-size: 25px;
     text-align: center;
 }
 
-.check_box p {
-    font-size: 60px;
+
+.check_box_N {
+    font-size: 25px
 }
 
-.check_box label {
-    cursor: pointer;
-    transition: 0.4s;
+
+.timer label {
+    padding: 1em;
+    display: flex;
+    justify-content: center;
 }
 
-.check_box input[type="checkbox"] {
-    cursor: pointer;
+.timer input{
+    font-size: 25px;
 }
 
-.check_box label:hover {
-    color: rgb(238, 210, 2)
+.timer p {
+    font-size: 30px;
+    margin-right: 10px;
 }
+
+.submit {
+    text-align: center;
+    font-size: 30px;
+    transition-duration: 0.4s;
+    background-color: rgb(238, 210, 2);
+}
+
+.submit:hover {
+    background-color: rgb(136, 8, 8);
+}
+
 
 .generate {
+    margin-top: 30px;
     text-align: center;
     font-size: 60px;
 }
@@ -56,6 +73,13 @@ main{
     text-align: center;
     font-size: 40px;
     transition-duration: 0.4s;
+    margin-top: -25px;
+    color: rgb(0, 0, 0);
+}
+
+.button p {
+    margin-top: 10px;
+    font-size: 35px;
 }
 
 .button input[type="button"]:hover {
@@ -64,7 +88,8 @@ main{
 
 .nickname {
     text-align: center;
-    padding: 2em;
+    padding: 20px;
+    margin-top: 15px;
 }
 
 .nickname p {
@@ -72,5 +97,22 @@ main{
 }
 
 .nickname label {
-    font-size: 50px;
+    font-size: 25px;
+    margin-right: 10px
+}
+
+.n_button{
+    margin-top: -10px;
+}
+
+.n_button input{
+    text-align: center;
+    font-size: 30px;
+    transition-duration: 0.4s;
+    background-color: rgb(238, 210, 2);
+    margin-top: 15px;
+}
+
+.n_button input:hover {
+    background-color: rgb(136, 8, 8);
 }

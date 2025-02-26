@@ -8,7 +8,7 @@ import { Enter } from '../enter/enter';
 export function Login() {
     return (
 
-            <main>
+        <main>
             <p className="question">Would you like to play a game?</p>
             <p className="introduction">
                 Real Time Tracking For Real Time Fun

@@ -37,7 +37,7 @@ export default function App() {
                 </nav>
                 <nav className="button">
                     <NavLink to="/">
-                    <button class="end">Title Page</button>
+                    <button className="end">Title Page</button>
                     </NavLink>
                 </nav>
             </header>
