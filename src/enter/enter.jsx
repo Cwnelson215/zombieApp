@@ -16,7 +16,7 @@ export function Enter() {
         setNickname(event.target.value);
     };
     const submitNickname = () => {
-        localStorage.setItem('player nickname', nickname);
+        localStorage.setItem('nickname', nickname);
     };
     const handleMessage = () => {
         setMessage("Gravitar Engaged");

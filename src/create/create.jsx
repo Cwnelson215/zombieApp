@@ -35,7 +35,7 @@ export function Create() {
         setNickname(event.target.value)
     }
     const submitNickname = () => {
-        localStorage.setItem('host nickname', nickname)
+        localStorage.setItem('nickname', nickname)
     };
 
     return (
