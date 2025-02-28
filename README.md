@@ -69,4 +69,11 @@ ReactP1 deliverables:
 
 ReactP2 deliverables:
 
-- [x] 
+- [x] Cloned and deployed Simon React to simon.infect.fyi
+- [x] Implemented Javascript code to make my pages functional and reactive
+- [x] My name and github link are displayed in the footer
+- [x] Updated notes.md as needed
+- [x] Pushed to Github several times over several days
+- [x] Deployed to my production environmnet at startup.infect.fyi
+- [x] startup.infect.fyi is publicly available
+- [x] Uploaded startup URL to canvas assignment
