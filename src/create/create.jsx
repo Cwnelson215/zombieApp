@@ -60,10 +60,10 @@ export function Create() {
             )}
         </div>
 
-        <div className="timer">
+        <div className="timer_s">
             {!checkboxY && (
                 <label>
-                    <p htmlFor="timer">Select Number of Minutes:</p>
+                    <p htmlFor="timer_s">Select Number of Minutes:</p>
                     <input type="number" id="timer" value={minutes} onChange={handleTimer} min="15" max="90" step="5"/>
                 </label>
             )}
@@ -79,8 +79,8 @@ export function Create() {
                 <label htmlF="Nickname">Enter Nickname:</label>
                 <input type="text" id="Nickname" onChange={handleNickname}/>
         </div>
-        <div className="n_button">
-        <input type="button" value="Submit Nickname" onClick={submitNickname}/>
+        <div>
+        <input  className="n_button" type="button" value="Submit Nickname" onClick={submitNickname}/>
         </div>
 
         <p className="generate">Generate Join Code</p>

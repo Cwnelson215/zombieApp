@@ -24,15 +24,16 @@ export function Enter() {
 
     return (
         <main>
+            <p class="heading">Enter A Join Code To Play</p>
             <div className="code">
-                <label name="code">Enter Join Code:</label>
+                <label name="code">Join Code:</label>
                 <input type="text" id="code" name="code" onChange={handleCode}/>
                 <button className="enter" onClick={submitJoinCode}>Enter</button>
                 <p className="nickname">Choose Your Nickname</p>
             </div>
 
             <div className="nickname_input">
-                <label forhtml="Nickname">Enter Nickname:</label>
+                <label forhtml="Nickname">Nickname:</label>
                 <input type="text" id="Nickname" name="Nickname" onChange={handleNickname}/>
                 <input className="n_button" type='button' value="Submit Nickname" onClick={submitNickname}/>
             </div>

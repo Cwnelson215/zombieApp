@@ -31,8 +31,16 @@ main {
     margin-left: 5px;
 }
 
+.timer {
+    margin-bottom: -2em;
+    position: absolute;
+    left: 0;
+    top: 225px;
+}
+
 .infected {
-    text-align: center;
+    display: flex;
+    justify-content: center;
     font-size: 25px;
     margin-left: 5px;
     color: rgb(136, 8, 8);
@@ -59,7 +67,7 @@ main {
 
 .survivor1 {
     margin-right: 15px;
-    color: rgb(40, 43, 43)
+    color: rgb(250, 250, 250);
 }
 .survivor1 img {
     transform: scale(75%);
@@ -80,7 +88,7 @@ main {
 
 .announcement {
     font-size: 30px;
-    margin-bottom: -3px;
+    margin-bottom: 20px;
     margin-top: 10px;
 }
 
@@ -107,4 +115,9 @@ main {
 .end:hover {
     background-color: rgb(238, 210, 2);
     color: rgb(136, 8, 8)
+}
+
+.g_over {
+    font-size: 100px;
+    margin-top: -35px;
 }
