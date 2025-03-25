@@ -2,7 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
-import { Login } from "./login/login";
+import { Home } from "./home/home";
 import { Create } from './create/create';
 import { Enter } from './enter/enter';
 import { Waitroom } from './waitroom/waitroom';
@@ -10,6 +10,7 @@ import { Running } from './running/running';
 
 
 export default function App() {
+    console.log("hello")
     return (
         <BrowserRouter>
         <div className='app bg-dark text-light'>
@@ -20,16 +21,11 @@ export default function App() {
                         <button className="h_button">Host Game</button>
                     </nav>
                     </NavLink>
-                    <NavLink to="/enter">
+                    <NavLink to="/game/enter">
                     <nav className="button">
                         <button className="j_button">Join Game</button>
                     </nav>
                     </NavLink>
-                <nav className="button">
-                    <NavLink to="/waitroom">
-                        <button className="w_button">Waiting Room</button>
-                    </NavLink>
-                </nav>
                 <nav className="button">
                     <NavLink to="/running">
                             <button className="s_button">Begin Infection</button>
@@ -42,10 +38,10 @@ export default function App() {
                 </nav>
             </header>
             <Routes>
-                <Route path='/' element={<Login />} />
+                <Route path='/' element={<Home />} />
                 <Route path='/create' element={<Create />} />
-                <Route path='/enter' element={<Enter />} />
-                <Route path='/waitroom' element={<Waitroom />} />
+                <Route path='game/enter' element={<Enter />} />
+                <Route path='game/:joinCode/waitroom' element={<Waitroom />} />
                 <Route path='/running' element={<Running />} />
             </Routes>
     

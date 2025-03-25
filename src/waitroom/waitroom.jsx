@@ -9,6 +9,8 @@ export function Waitroom() {
         const name = localStorage.getItem("nickname");
         setNickname(name);
     }, [])
+
+    
     
     return (
         <main>

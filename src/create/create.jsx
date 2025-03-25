@@ -1,8 +1,10 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {useNavigate} from 'react-router-dom';
 import "./create_game.css";
 
 export function Create() {
+    const navigate = useNavigate();
     const [checkboxY, setCheckBoxY] = React.useState(false);
     const [checkboxN, setCheckBoxN] = React.useState(false);
     const [minutes, setMinutes] = React.useState(15);
@@ -25,17 +27,22 @@ export function Create() {
     const handleTimer = (event) => {
         setMinutes(event.target.value);
     };
-    const submitTime = () => {
-        localStorage.setItem('timer', minutes);
-    };
-    const handleMessage = () => {
-        setMessage("Code: BG1252");
-    };
     const handleNickname = (event) => {
         setNickname(event.target.value)
     }
-    const submitNickname = () => {
-        localStorage.setItem('nickname', nickname)
+    const handleMessage = () => {
+        setMessage("Code: BG1252");
+    };
+    const submit = async () => {
+        let res =  await fetch("/api/game/create", {
+            method: 'Post',
+            body: JSON.stringify({
+                timer: minutes,
+                nickName: nickname,
+            })
+        });
+        res = await res.json()
+        navigate(`/game/${res.joinCode}/join`)
     };
 
     return (
@@ -68,19 +75,13 @@ export function Create() {
                 </label>
             )}
         </div>
-        <nav>
-            <labal>
-                {!checkboxY && (<input className="submit" type="button" value="Submit Time" onClick={submitTime}/>
-                )}
-            </labal>
-        </nav>
 
         <div className="nickname">
                 <label htmlF="Nickname">Enter Nickname:</label>
                 <input type="text" id="Nickname" onChange={handleNickname}/>
         </div>
         <div>
-        <input  className="n_button" type="button" value="Submit Nickname" onClick={submitNickname}/>
+        <input  className="n_button" type="button" value="Submit" onClick={submit}/>
         </div>
 
         <p className="generate">Generate Join Code</p>

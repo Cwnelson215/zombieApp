@@ -3,43 +3,24 @@ import './enter_joincode.css';
 
 export function Enter() {
     const [joinCode, setJoinCode] = React.useState("")
-    const [nickname, setNickname] = React.useState("")
-    const [message, setMessage] = React.useState("")
 
     const handleCode = (event) => {
         setJoinCode(event.target.value);
     };
-    const submitJoinCode = () => {
-        localStorage.setItem('join code', joinCode);
+
+    const submit = async () => {
+        navigate(`/game/${res.joinCode}/join`)
     };
-    const handleNickname = (event) => {
-        setNickname(event.target.value);
-    };
-    const submitNickname = () => {
-        localStorage.setItem('nickname', nickname);
-    };
-    const handleMessage = () => {
-        setMessage("Gravitar Engaged");
-    };
+
 
     return (
         <main>
-            <p class="heading">Enter A Join Code To Play</p>
+            <p className="heading">Enter A Join Code To Play</p>
             <div className="code">
                 <label name="code">Join Code:</label>
                 <input type="text" id="code" name="code" onChange={handleCode}/>
-                <button className="enter" onClick={submitJoinCode}>Enter</button>
+                <button className="enter" onClick={submit}>Enter</button>
                 <p className="nickname">Choose Your Nickname</p>
-            </div>
-
-            <div className="nickname_input">
-                <label forhtml="Nickname">Nickname:</label>
-                <input type="text" id="Nickname" name="Nickname" onChange={handleNickname}/>
-                <input className="n_button" type='button' value="Submit Nickname" onClick={submitNickname}/>
-            </div>
-            <div className="button">
-                <input type="button" value="Use Gravatar" onClick={handleMessage} />
-                {message && <p>{message}</p>}
             </div>
         </main>
     );
