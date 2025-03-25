@@ -16,26 +16,6 @@ export default function App() {
         <div className='app bg-dark text-light'>
             <header>
                 <p className="title">INFECTED.FYI</p>
-                    <NavLink to="/create">
-                    <nav className="button">
-                        <button className="h_button">Host Game</button>
-                    </nav>
-                    </NavLink>
-                    <NavLink to="/game/enter">
-                    <nav className="button">
-                        <button className="j_button">Join Game</button>
-                    </nav>
-                    </NavLink>
-                <nav className="button">
-                    <NavLink to="/running">
-                            <button className="s_button">Begin Infection</button>
-                    </NavLink>
-                </nav>
-                <nav className="button">
-                    <NavLink to="/">
-                    <button className="end">Title Page</button>
-                    </NavLink>
-                </nav>
             </header>
             <Routes>
                 <Route path='/' element={<Home />} />

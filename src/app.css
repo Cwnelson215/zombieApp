@@ -34,8 +34,7 @@ header {
     text-align: center;
     background-color: transparent;
     font-family: 'zombie';
-    margin-left: 0;
-    margin-right: auto;
+    margin-top: -25px;
 }
 
 main {
@@ -65,57 +64,6 @@ main {
     text-align: center;
 }
 
-.button{
-    padding: 10px;
-    text-align: right;
-    justify-content: right;
-}
-
-.j_button{
-    font-size: 25px;
-    transition-duration: 0.4s;
-    color: rgb(238, 210, 2);
-    background-color: rgb(40, 43, 43);
-}
-
-.h_button{
-    text-align: right;
-    font-size: 25px;
-    transition-duration: 0.4s;
-    color: rgb(238, 210, 2);
-    background-color: rgb(40, 43, 43);
-}
-
-.w_button {
-    font-size: 25px;
-    transition-duration: 0.4s;
-    color: rgb(238, 210, 2);
-    background-color: rgb(40, 43, 43);
-}
-
-.s_button{
-    text-align: right;
-    font-size: 25px;
-    transition-duration: 0.4s;
-    color: rgb(238, 210, 2);
-    background-color: rgb(40, 43, 43);
-}
-
-.w_button:hover {
-    background-color: rgb(136, 8, 8);;
-}
-
-.h_button:hover {
-    background-color: rgb(136, 8, 8);;
-}
-
-.j_button:hover {
-    background-color: rgb(136, 8, 8);;
-}
-.s_button:hover {
-    background-color: rgb(136, 8, 8);
-}
-
 .warning {
     text-align: center;
     color:rgb(136, 8, 8);
@@ -128,7 +76,7 @@ footer {
     background-color:rgb(73, 17, 17);
     color: white;
     padding: 1em;
-    height: 41px;
+    height: 49px;
 }
 
 @keyframes beware {

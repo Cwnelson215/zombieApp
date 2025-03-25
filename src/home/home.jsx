@@ -27,9 +27,13 @@ export function Home() {
     return (
         <main>
             <p className="heading">Welcome</p>
-            <p className="info">Create A Game Or Join An Existing Game To Start</p>
-            <div className="code">
-                <button className="create" onClick={createGame}>Create Game</button>
+            <div>
+                <p className="invite">Create A Game Or Join An Existing Game To Start</p>
+            </div>
+            <div className="buttons">
+                <div>
+                    <button className="create" onClick={createGame}>Create Game</button>
+                </div>
                 <button className="join" onClick={joinGame}>Join Game</button>
             </div>
             <div className="cfact">

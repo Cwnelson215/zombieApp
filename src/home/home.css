@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'zombie';
+    src: url(fonts/zombie.otf) format("opentype")
+}
+.bebas-neue-regular {
+    font-family: "Bebas Neue", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+
+* {
+    font-family: 'Bebas Neue';
+}
+
+main{
+    padding: 8em;
+    height: 870px;
+    border: 5px solid rgb(0, 0, 0);
+}
+
+.heading {
+    text-align: center;
+    font-size: 60px;
+}
+
+.invite {
+    text-align: center;
+    font-size: 50px;
+    margin-top: 120px;
+    color: rgb(238, 210, 2);
+}
+
+.buttons {
+    text-align: center;
+    color: rgb(238, 210, 2);
+    margin-top: 25px;
+}
+
+.create {
+    background-color: rgb(238, 210, 2);
+    padding: 1em;
+    transition-duration: 0.4s;
+    font-size: 30px;
+    margin-top: 25px;
+}
+
+.create:hover {
+    background-color: rgb(136, 8, 8);
+}
+
+.join {
+    background-color: rgb(238, 210, 2);
+    padding: 1em;
+    margin: 1em;
+    transition-duration: 0.4s;
+}
+
+.join:hover {
+    background-color: rgb(136, 8, 8);
+}
+
+.fact {
+    text-align: center;
+    color: rgb(136, 8, 8);
+    padding: 1em;
+    transition-duration: 0.4s;
+    font-size: 30px;
+}
