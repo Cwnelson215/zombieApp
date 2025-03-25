@@ -36,11 +36,14 @@ main{
 .total_joined {
     color: rgb(173,162, 162);
     font-size: 25px;
+    margin-top: -25px;
 }
 
-.ready {
+.Players-ready {
     color: rgb(173,162, 162);
     font-size: 100px;
+    margin-bottom: -50px;
+    margin-top: -50px;
 }
 
 .container {

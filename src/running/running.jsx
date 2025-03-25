@@ -1,9 +1,11 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './game_running.css';
 
 export function Running() {
     const initialMnutes = parseInt(localStorage.getItem("timer")) || 0;
+    const navigate = useNavigate();
     const [nickname, setNickname] = React.useState("");
     const [minutes, setMinutes] = React.useState(initialMnutes);
     const [tens, setTens] = React.useState(0);
@@ -31,8 +33,7 @@ export function Running() {
     }
     
     React.useEffect(() => {
-        const name = localStorage.getItem("nickname");
-        setNickname(name);
+        setNickname("Lebron James");
     }, []);
 
     React.useEffect(() => {
@@ -82,7 +83,7 @@ export function Running() {
                 {infected && (
                     <div className="survivor1">
                         <img alt="player avater" src="images/pic3.jpeg" />
-                        <p className="player"><strong>{nickname}</strong></p>
+                        <p className="player"><strong>Lebron James</strong></p>
                     </div>
                 )}
             </div>
@@ -91,7 +92,7 @@ export function Running() {
                 {!infected && (
                     <div className="survivor1">
                         <img alt="player avater" src="images/pic3.jpeg" />
-                        <p className="player"><strong>{nickname}</strong></p>
+                        <p className="player"><strong>Lebron James</strong></p>
                     </div>
                 )}
                 <div className="survivor2">
@@ -114,6 +115,8 @@ export function Running() {
                     <p>GAME OVER</p>
                 )}
             </div>
+
+            <button className="end" onClick={() => navigate('/')}>End Game</button>
         </main>
     );
 }

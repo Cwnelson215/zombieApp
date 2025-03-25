@@ -97,6 +97,7 @@ main {
     background-color: rgb(136, 8, 8);
     transition-duration: 0.4s;
     font-family: "zombie";
+    margin-top: -20px;
 }
 
 .announce button:hover {
@@ -110,6 +111,7 @@ main {
     color: rgb(238, 210, 2);
     font-family: "zombie";
     transition-duration: 0.4s;
+    margin-top: 40px;
 }
 
 .end:hover {
