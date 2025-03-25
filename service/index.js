@@ -46,6 +46,19 @@ apiRouter.post('/game/create', async (req, res) => {
     })
 });
 
+apiRouter.post('/player/add', async (req, res) => {
+    const game = db.games.find((g) => g.joinCode === req.body.joinCode);
+    if (!game) {
+        res.status(404).send({ msg: 'Game not found' });
+        return;
+    }
+    const player = game.addPlayer(req.body.nickname, req.body.profilePicture);
+    res.json({
+        joinCode: game.joinCode,
+        playerId: player.id,
+    });
+});
+
 // Default error handler
 app.use(function (err, req, res, next) {
   res.status(500).send({ type: err.name, message: err.message });

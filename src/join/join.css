@@ -1,0 +1,102 @@
+@font-face {
+    font-family: 'zombie';
+    src: url(fonts/zombie.otf) format("opentype")
+}
+.bebas-neue-regular {
+    font-family: "Bebas Neue", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+
+* {
+    font-family: 'Bebas Neue';
+}
+
+.joinCode {
+    text-align: center;
+    font-size: 45px;
+    margin-top: 130px;
+}
+
+.heading {
+    text-align: center;
+    font-size: 80px;
+    font-family: 'zombie';
+    margin-top: -15px;
+}
+
+.prompt {
+    text-align: center;
+    font-size: 50px;
+    margin-bottom: -25px;
+}
+
+.profilePictures {
+    justify-content: center;
+}
+
+.pictures {
+    display: flex;
+    transform: scale(.75);
+    cursor: pointer;
+    justify-content: center;
+}
+
+.pictures img {
+    margin: 10px;
+}
+
+.picture-0 img {
+    border: 10px solid rgb(238, 210, 2);
+    transition-duration: 0.4s;
+}
+
+.picture-0 img:hover {
+    border: 10px solid rgb(136, 8, 8);
+}
+
+.picture-1 img {
+    border: 10px solid rgb(238, 210, 2);
+    transition-duration: 0.4s;
+}
+
+.picture-1 img:hover {
+    border: 10px solid rgb(136, 8, 8);
+}
+
+.picture-2 img {
+    border: 10px solid rgb(238, 210, 2);
+    transition-duration: 0.4s;
+}
+
+.picture-2 img:hover {
+    border: 10px solid rgb(136, 8, 8);
+}
+
+.picture-0.selected {
+    border: 10px solid rgb(136, 8, 8);
+}
+
+.picture-1.selected {
+    border: 10px solid rgb(136, 8, 8);
+}
+
+.picture-2.selected {
+    border: 10px solid rgb(136, 8, 8);
+}
+
+
+.ready {
+    text-align: center;
+    font-size: 50px;
+    margin-top: 50px;
+    color: black;
+    background-color: rgb(238, 210, 2);
+    transition-duration: 0.4s;
+}
+
+.ready:hover {
+    background-color: rgb(136, 8, 8);
+}

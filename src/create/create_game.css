@@ -14,7 +14,7 @@
     font-family: 'Bebas Neue';
 }
 
-main{
+main {
     padding: 8em;
     height: 770px;
     border: 5px solid rgb(0, 0, 0);
@@ -23,16 +23,17 @@ main{
 .question {
     text-align: center;
     font-size: 60px;
+    margin-top: 85px;
 }
 
 .check_box_Y {
-    font-size: 25px;
+    font-size: 40px;
     text-align: center;
 }
 
 
 .check_box_N {
-    font-size: 25px
+    font-size: 40px;
 }
 
 
@@ -47,66 +48,16 @@ main{
 }
 
 .timer_s p {
-    font-size: 30px;
-    margin-right: 10px;
-}
-
-.submit {
-    text-align: center;
-    font-size: 30px;
-    transition-duration: 0.4s;
-    background-color: rgb(238, 210, 2);
-}
-
-.submit:hover {
-    background-color: rgb(136, 8, 8);
-}
-
-
-.generate {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 60px;
-}
-
-.button {
-    text-align: center;
     font-size: 40px;
-    transition-duration: 0.4s;
-    margin-top: -25px;
-    color: rgb(0, 0, 0);
-}
-
-.button p {
-    margin-top: 10px;
-    font-size: 35px;
-}
-
-.button input[type="button"]:hover {
-    background-color: rgb(238, 210, 2);
-}
-
-.nickname {
-    text-align: center;
-    padding: 20px;
-    margin-top: 15px;
-}
-
-.nickname p {
-    font-size: 60px;
-}
-
-.nickname label {
-    font-size: 25px;
-    margin-right: 10px
+    margin-right: 10px;
 }
 
 .n_button{
     text-align: center;
-    font-size: 30px;
+    font-size: 60px;
     transition-duration: 0.4s;
     background-color: rgb(238, 210, 2);
-    margin-top: -10px;
+    margin-top: 80px;
 }
 
 .n_button input:hover {

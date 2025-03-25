@@ -22,7 +22,7 @@ export class GameState {
     constructor(length) {
         this.generateJoinCode();
         this.endTime = 0;
-        this.length;
+        this.length = length;
     }
 
     generateJoinCode(){
@@ -42,10 +42,22 @@ export class GameState {
         
     }
 
+    addPlayer(name, profile_pic) {
+        const characters = '0123456789';
+        let token = '';
+        for (let i = 0; i < 4; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            token += characters[randomIndex];
+        }
+        const player = new PlayerState(name, profile_pic, token);
+        this.players.push(player);
+        return player;
+    }
+
 }
 
 export class PlayerState {
-    constructor(name, id) {
+    constructor(name, profile_pic, id) {
         this.name = name;
         this.id = id;
         this.status = false;

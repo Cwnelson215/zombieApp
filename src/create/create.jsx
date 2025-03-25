@@ -8,8 +8,7 @@ export function Create() {
     const [checkboxY, setCheckBoxY] = React.useState(false);
     const [checkboxN, setCheckBoxN] = React.useState(false);
     const [minutes, setMinutes] = React.useState(15);
-    const [message, setMessage] = React.useState("");
-    const [nickname, setNickname] = React.useState("")
+
 
 
     const handleCheckboxYChange = () => {
@@ -27,18 +26,12 @@ export function Create() {
     const handleTimer = (event) => {
         setMinutes(event.target.value);
     };
-    const handleNickname = (event) => {
-        setNickname(event.target.value)
-    }
-    const handleMessage = () => {
-        setMessage("Code: BG1252");
-    };
+
     const submit = async () => {
         let res =  await fetch("/api/game/create", {
             method: 'Post',
             body: JSON.stringify({
-                timer: minutes,
-                nickName: nickname,
+                timer: minutes
             })
         });
         res = await res.json()
@@ -76,19 +69,9 @@ export function Create() {
             )}
         </div>
 
-        <div className="nickname">
-                <label htmlF="Nickname">Enter Nickname:</label>
-                <input type="text" id="Nickname" onChange={handleNickname}/>
-        </div>
         <div>
-        <input  className="n_button" type="button" value="Submit" onClick={submit}/>
+        <input  className="n_button" type="button" value="Create Game" onClick={submit}/>
         </div>
-
-        <p className="generate">Generate Join Code</p>
-        <nav className="button">
-        <input type="button" onClick={handleMessage} value="Get Code"/>
-        {message && <p>{message}</p>}
-        </nav>
 
     </main>
     );
