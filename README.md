@@ -77,3 +77,16 @@ ReactP2 deliverables:
 - [x] Deployed to my production environmnet at startup.infect.fyi
 - [x] startup.infect.fyi is publicly available
 - [x] Uploaded startup URL to canvas assignment
+
+StartupService deliverables:
+
+- [x] Cloned and deployed Simon Service
+- [x] Created service/index.js with the specified code added
+- [x] Added vite.config.js file with specified code
+- [x] Created endpoints for backend
+- [x] Called thrid party cat fact api endpoint for home page
+- [x] Debugged my application using VS Code Node debugger
+- [x] Periodically pushed and commited to github
+- [x] Coppied deployService.sh from Simon
+- [x] Deployed to my domain
+- [x] Uploaded URL to canvas
