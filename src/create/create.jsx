@@ -35,6 +35,7 @@ export function Create() {
             })
         });
         res = await res.json()
+        
         navigate(`/game/${res.joinCode}/join`)
     };
 
