@@ -18,8 +18,8 @@ const gameCollection = db.collection('games');
     }
 })();
 
-async function createGame(client,  joinCode, length) {
-    const result = await client.db.gameCollection.insertOne(
+function createGame(joinCode, length) {
+    return client.db.gameCollection.insertOne(
         {
             _id: joinCode,
             players: [],
@@ -29,18 +29,24 @@ async function createGame(client,  joinCode, length) {
     );
 }
 
-async function addPlayer(client, joinCode, nickName, picNumber) {
+async function addPlayer(joinCode, nickName, picNumber) {
     const result = client.db.gameCollection.findOne({ _id: joinCode});
     if(result) {
         await client.db.gameCollection.players.insertOne({
             name: nickName,
             profilePic: picNumber,
-            status: flase
+            status: false
         }
         );
     } else {
         console.log(`No game found with join code '${joinCode}`);
     }
+}
+
+
+module.exports = {
+    createGame,
+    addPlayer
 }
 
 
