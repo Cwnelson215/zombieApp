@@ -2,7 +2,7 @@ import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import {createGame, addPlayer, findGame} from "./database.js"
+import {createGame, addPlayer, findGame, findPlayer} from "./database.js"
 
 const app = express();
 
@@ -64,9 +64,16 @@ apiRouter.post('/game/check' , async (req, res) => {
   const game = await findGame(req.body.joinCode);
   console.log(game)
   res.status(200).json({
-    gameFound: !!game
+    gameFound: !!game,
   });
 });
+
+apiRouter.post('/game/getPlayers', async (req, res) => {
+  const game = await findGame(req.body.joinCode)
+  res.json({
+    players: game.players
+  });
+}); 
 
 // Default error handler
 app.use(function (err, req, res, next) {

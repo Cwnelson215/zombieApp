@@ -58,12 +58,24 @@ export async function addPlayer(joinCode, nickName, picNumber) {
     }
 }
 
-export function findGame(joinCode) {
-    const result = gameCollection.findOne({ joinCode: joinCode});
+export async function findGame(joinCode) {
+    const result = await gameCollection.findOne({ joinCode: joinCode});
     if(result) {
         return result;
     } else {
-        console.log(`No1 game found with join code '${joinCode}`);
+        console.log(`No game found with join code '${joinCode}`);
+    }
+}
+
+export async function findPlayer(authToken) {
+    const result = await gameCollection.findOne({
+        players: {$elemMatch: {authToken: authToken}}
+    });
+    if(result) {
+        const player = result.players.find(player => player.authToken === authToken);
+        return player
+    } else {
+        console.log(`No player found with authToken '${authToken}'`)
     }
 }
 
@@ -85,48 +97,5 @@ function generateAuthToken() {
         token += characters[randomIndex];
     }
     return token
-}
-export class GameState {
-
-    players = [];
-
-    constructor(length) {
-        this.generateJoinCode();
-        this.endTime = 0;
-        this.length = length;
-    }
-
-    generateJoinCode(){
-        const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        let token = '';
-        for (let i = 0; i < 6; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            token += characters[randomIndex];
-        }
-        this.joinCode = token
-    }
-
-    addPlayer(name, profile_pic) {
-        const characters = '0123456789';
-        let token = '';
-        for (let i = 0; i < 4; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            token += characters[randomIndex];
-        }
-        const player = new PlayerState(name, profile_pic, token);
-        this.players.push(player);
-        return player;
-    }
-
-}
-
-export class PlayerState {
-    constructor(name, profile_pic, id) {
-        this.name = name;
-        this.id = id;
-        this.status = false;
-        this.profile_pic = profile_pic;
-        this.auth_token;
-    }
 }
 
