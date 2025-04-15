@@ -3,6 +3,7 @@ import { join } from "path";
 import { MongoClient } from "mongodb";
 import {readFileSync} from 'fs';
 
+
 const config = JSON.parse(readFileSync('./dbConfig.json', 'utf-8'))
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
