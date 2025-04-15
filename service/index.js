@@ -2,12 +2,11 @@ import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import {Database} from "./database.js"
+import {createGame, addPlayer, findGame} from "./database.js"
 
 const app = express();
 
 const authCookieName = 'token';
-const db = new Database();
 const fontendPath = 'public';
 
 // The scores and users are saved in memory and disappear whenever the service is restarted.
@@ -41,23 +40,32 @@ const verifyAuth = async (req, res, next) => {
 };
 
 apiRouter.post('/game/create', async (req, res) => {
-    const game = db.createGame(req.body.timer);
+    const game = await createGame(req.body.timer);
+    console
     res.json({
         joinCode: game.joinCode,
     })
 });
 
 apiRouter.post('/player/add', async (req, res) => {
-    const game = db.games.find((g) => g.joinCode === req.body.joinCode);
+    const game = await findGame(req.body.joinCode);
     if (!game) {
         res.status(404).send({ msg: 'Game not found' });
         return;
     }
-    const player = game.addPlayer(req.body.nickname, req.body.profilePicture);
+    const player = await addPlayer(req.body.joinCode, req.body.nickname, req.body.profilePicture);
     res.json({
         joinCode: game.joinCode,
-        playerId: player.id,
+        authToken: player.authToken
     });
+});
+
+apiRouter.post('/game/check' , async (req, res) => {
+  const game = await findGame(req.body.joinCode);
+  console.log(game)
+  res.status(200).json({
+    gameFound: !!game
+  });
 });
 
 // Default error handler

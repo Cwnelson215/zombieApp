@@ -8,6 +8,40 @@ export function Join() {
     const { joinCode } = useParams();
     const [selectedPicture, setSelectedPicture] = React.useState(null);
     const [nickname, setNickname] = React.useState('');
+    const [checkingGame, setCheckingGame] = React.useState(true);
+    const [checkingGameError, setCheckingGameError] = React.useState(false)
+    
+    useEffect(() => {
+        const checkGame = async ()=> {
+            let res = await fetch("/api/game/check", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    joinCode: joinCode
+                })
+            })
+            res = await res.json()
+            if(res.gameFound == false) {
+                console.log("Game not found")
+                setCheckingGameError("No Game Found")
+            } else {
+                console.log("Game Found")
+            }
+        }
+        
+        checkGame().catch((e)=>{
+            console.error(e);
+            setCheckingGameError(e);
+        }).finally(()=>{
+            setCheckingGame(false);
+        });
+    }, [])
+    
+    function takeBack() {
+        navigate("/game/enter")
+    }
     
     const profilePictures = [
         '/images/pic1.jpeg',
@@ -36,13 +70,16 @@ export function Join() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    joinCode,
-                    nickname,
+                    joinCode: joinCode,
+                    nickname: nickname,
                     profilePicture: selectedPicture,
                 }),
             });
     
             if (response.ok) {
+                let res  = await response.json();
+                let authToken = res.authToken;
+                localStorage.setItem("authToken", authToken);
                 navigate(`/game/${joinCode}/waitroom`);
             } else {
                 const errorData = await response.json();
@@ -53,6 +90,23 @@ export function Join() {
             alert('An error occurred while adding the player.');
         }
     };
+
+    if (checkingGame) {
+        return (
+            <main>
+                <p className="heading">Checking For Game...</p>
+            </main> 
+        )
+    }
+
+    if (checkingGameError){
+        return (
+            <main>
+                <p className="heading">{checkingGameError}</p>
+                <button className="ready" onClick={takeBack}>Enter Code</button>
+            </main> 
+        )
+    }
     
     return (
 
@@ -85,8 +139,6 @@ export function Join() {
             <div className="r_button">
                 <button className="ready" onClick={readyUp}>Ready!</button>
             </div>
-
-
         </main>
     );
 }
