@@ -10,15 +10,18 @@ export function Waitroom() {
 
     React.useEffect(() => {
         const fetchData = async () => {
-            console.log(joinCode);
+            console.log(joinCode)
             let res = await fetch("/api/game/getPlayers", {
                 method: 'Post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
-                    joinCode
+                    joinCode: joinCode
                 })
             });
             res = await res.json();
-            setPlayers(res.game.players);
+            setPlayers(res.players);
         }
         fetchData();
     }, [joinCode])

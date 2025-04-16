@@ -70,9 +70,14 @@ apiRouter.post('/game/check' , async (req, res) => {
 
 apiRouter.post('/game/getPlayers', async (req, res) => {
   const game = await findGame(req.body.joinCode)
-  res.json({
-    players: game.players
-  });
+  if(!game){
+    res.status(404)
+  } else{
+    res.json({
+      players: game.players
+    });
+  }
+  
 }); 
 
 // Default error handler
