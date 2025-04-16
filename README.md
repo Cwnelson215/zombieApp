@@ -90,3 +90,14 @@ StartupService deliverables:
 - [x] Coppied deployService.sh from Simon
 - [x] Deployed to my domain
 - [x] Uploaded URL to canvas
+
+StartupDB Deliverables:
+
+- [x] Cloned and deployed Simon Service
+- [x] Added code for connecting to database
+- [x] Application data, games and players, stored in Mongodb
+- [x] Debugged application in VS Code and browser
+- [x] Commited to Github regularly
+- [x] Pushed final version to github
+- [x] Deployed to production environment
+- [x] Uploaded URL to canvas
