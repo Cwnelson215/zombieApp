@@ -2,13 +2,12 @@
     font-family: 'zombie';
     src: url(fonts/zombie.otf) format("opentype")
 }
+
 .bebas-neue-regular {
     font-family: "Bebas Neue", serif;
     font-weight: 400;
     font-style: normal;
-  }
-
-
+}
 
 * {
     font-family: 'Bebas Neue';
@@ -16,87 +15,84 @@
 
 .joinCode {
     text-align: center;
-    font-size: 45px;
-    margin-top: 130px;
+    font-size: clamp(28px, 6vw, 45px);
+    margin-top: clamp(30px, 8vh, 130px);
 }
 
 .heading {
     text-align: center;
-    font-size: 80px;
+    font-size: clamp(48px, 10vw, 80px);
     font-family: 'zombie';
-    margin-top: -15px;
+    margin-top: -10px;
 }
 
 .prompt {
     text-align: center;
-    font-size: 50px;
-    margin-bottom: -25px;
+    font-size: clamp(28px, 6vw, 50px);
+    margin-bottom: 0;
 }
 
 .profilePictures {
     justify-content: center;
+    padding: 0 1rem;
 }
 
 .pictures {
     display: flex;
-    transform: scale(.75);
+    flex-wrap: wrap;
+    transform: none;
     cursor: pointer;
     justify-content: center;
+    gap: 0.5rem;
 }
 
 .pictures img {
-    margin: 10px;
+    margin: 5px;
+    width: clamp(80px, 20vw, 150px);
+    height: auto;
+    object-fit: cover;
 }
 
-.picture-0 img {
-    border: 10px solid rgb(238, 210, 2);
-    transition-duration: 0.4s;
-}
-
-.picture-0 img:hover {
-    border: 10px solid rgb(136, 8, 8);
-}
-
-.picture-1 img {
-    border: 10px solid rgb(238, 210, 2);
-    transition-duration: 0.4s;
-}
-
-.picture-1 img:hover {
-    border: 10px solid rgb(136, 8, 8);
-}
-
+.picture-0 img,
+.picture-1 img,
 .picture-2 img {
-    border: 10px solid rgb(238, 210, 2);
+    border: clamp(4px, 1vw, 10px) solid rgb(238, 210, 2);
     transition-duration: 0.4s;
 }
 
+.picture-0 img:hover,
+.picture-1 img:hover,
 .picture-2 img:hover {
-    border: 10px solid rgb(136, 8, 8);
+    border-color: rgb(136, 8, 8);
 }
 
-.picture-0.selected {
-    border: 10px solid rgb(136, 8, 8);
+.picture-0.selected img,
+.picture-1.selected img,
+.picture-2.selected img {
+    border-color: rgb(136, 8, 8);
 }
-
-.picture-1.selected {
-    border: 10px solid rgb(136, 8, 8);
-}
-
-.picture-2.selected {
-    border: 10px solid rgb(136, 8, 8);
-}
-
 
 .ready {
     text-align: center;
-    font-size: 50px;
-    margin-top: 50px;
+    font-size: clamp(28px, 6vw, 50px);
+    margin-top: clamp(20px, 4vh, 50px);
     color: black;
     background-color: rgb(238, 210, 2);
     transition-duration: 0.4s;
+    padding: 0.5em 1.5em;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .ready:hover {
     background-color: rgb(136, 8, 8);
+}
+
+@media (max-width: 480px) {
+    .pictures img {
+        width: clamp(70px, 25vw, 100px);
+    }
 }

@@ -2,6 +2,7 @@
     font-family: 'zombie';
     src: url(fonts/zombie.otf) format("opentype")
 }
+
 .bebas-neue-regular {
     font-family: "Bebas Neue", serif;
     font-weight: 400;
@@ -17,87 +18,96 @@
 }
 
 header img {
-    margin-top: -50px;
-    transform: scale(70%);
+    margin-top: -20px;
+    width: clamp(150px, 40vw, 300px);
+    height: auto;
 }
 
 main {
-    height: 810px;
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(0.5rem, 2vw, 1rem);
 }
 
-.i_count {
-    font-size: 50px;
-    margin-bottom: -20px;
-    margin-left: 5px;
+.timer-section {
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
 .timer {
-    margin-bottom: -2em;
-    position: absolute;
-    left: 0;
-    top: 225px;
+    font-size: clamp(60px, 15vw, 120px);
+    margin: 0;
+    text-align: center;
+}
+
+.i_count {
+    font-size: clamp(28px, 6vw, 50px);
+    margin-bottom: 0;
+    text-align: center;
 }
 
 .infected {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    font-size: 25px;
-    margin-left: 5px;
+    font-size: clamp(16px, 3vw, 25px);
     color: rgb(136, 8, 8);
+    gap: 0.5rem;
 }
 
-.infected img{
-    transform: scale(75%);
-    margin-bottom: -20px;
+.infected img {
+    width: clamp(50px, 12vw, 80px);
+    height: auto;
 }
 
 .s_count {
-    font-size: 50px;
-    margin-left: 5px;
-    margin-bottom: -30px;
+    font-size: clamp(28px, 6vw, 50px);
+    text-align: center;
+    margin-bottom: 0;
 }
 
 .survivors {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     text-align: center;
-    font-size: 25px;
+    font-size: clamp(16px, 3vw, 25px);
     color: rgb(173, 162, 162);
+    gap: 0.5rem;
 }
 
 .survivor1 {
-    margin-right: 15px;
     color: rgb(250, 250, 250);
 }
-.survivor1 img {
-    transform: scale(75%);
-    margin-bottom: -20px;
-}
 
-.survivor2 {
-    margin-left: 15px;
-}
+.survivor1 img,
 .survivor2 img {
-    transform: scale(75%);
-    margin-bottom: -20px;
+    width: clamp(50px, 12vw, 80px);
+    height: auto;
 }
 
 .announce {
     text-align: center;
+    margin-top: auto;
+    padding: 1rem 0;
 }
 
 .announcement {
-    font-size: 30px;
-    margin-bottom: 20px;
-    margin-top: 10px;
+    font-size: clamp(20px, 4vw, 30px);
+    margin-bottom: 1rem;
 }
 
 .announce button {
-    font-size: 30px;
+    font-size: clamp(20px, 4vw, 30px);
     background-color: rgb(136, 8, 8);
     transition-duration: 0.4s;
     font-family: "zombie";
-    margin-top: -20px;
+    padding: 0.5em 1em;
+    border: none;
+    cursor: pointer;
+    color: rgb(238, 210, 2);
 }
 
 .announce button:hover {
@@ -106,20 +116,32 @@ main {
 }
 
 .end {
-    font-size: 25px;
+    font-size: clamp(18px, 4vw, 25px);
     background-color: rgb(136, 8, 8);
     color: rgb(238, 210, 2);
     font-family: "zombie";
     transition-duration: 0.4s;
-    margin-top: 40px;
+    margin-top: 1rem;
+    padding: 0.5em 1em;
+    border: none;
+    cursor: pointer;
 }
 
 .end:hover {
     background-color: rgb(238, 210, 2);
-    color: rgb(136, 8, 8)
+    color: rgb(136, 8, 8);
 }
 
 .g_over {
-    font-size: 100px;
-    margin-top: -35px;
+    font-size: clamp(48px, 12vw, 100px);
+    text-align: center;
+    margin: 0;
+}
+
+@media (max-width: 480px) {
+    .infected img,
+    .survivor1 img,
+    .survivor2 img {
+        width: clamp(40px, 18vw, 60px);
+    }
 }

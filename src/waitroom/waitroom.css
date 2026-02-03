@@ -2,6 +2,7 @@
     font-family: 'zombie';
     src: url(fonts/zombie.otf) format("opentype")
 }
+
 .bebas-neue-regular {
     font-family: "Bebas Neue", serif;
     font-weight: 400;
@@ -12,96 +13,119 @@
     font-family: 'Bebas Neue';
 }
 
-.welcome{
+.welcome {
     background-color: transparent;
     font-family: 'zombie';
-    font-size: 125px;
+    font-size: clamp(48px, 12vw, 125px);
     text-align: center;
     color: rgb(238, 210, 2);
+    margin: 0;
+    line-height: 1.1;
 }
 
 .introduction {
     color: rgb(238, 210, 2);
-    font-size: 35px;
+    font-size: clamp(20px, 4vw, 35px);
     background-color: transparent;
+    text-align: center;
 }
 
-main{
+main {
     background-color: rgb(40, 43, 43);
-    padding: 1em;
-    height: 810px;
+    padding: clamp(0.5rem, 2vw, 1rem);
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
 .total_joined {
-    color: rgb(173,162, 162);
-    font-size: 25px;
-    margin-top: -25px;
+    color: rgb(173, 162, 162);
+    font-size: clamp(18px, 3vw, 25px);
+    margin-top: 0;
+    text-align: center;
 }
 
 .Players-ready {
-    color: rgb(173,162, 162);
-    font-size: 100px;
-    margin-bottom: -50px;
-    margin-top: -50px;
+    color: rgb(173, 162, 162);
+    font-size: clamp(48px, 12vw, 100px);
+    margin: 0;
+    text-align: center;
 }
 
 .container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.player1,
+.player2,
+.player3 {
+    font-size: clamp(16px, 3vw, 25px);
+    text-align: center;
+    flex: 0 0 auto;
+    min-width: 80px;
 }
 
 .player1 {
-    font-size: 25px;
     color: rgb(136, 8, 8);
-    text-align: center;
 }
 
-.player1 img {
-    transform: scale(75%);
-}
-
-.player2 {
-    font-size: 25px;
-    color: rgb(238, 210, 2);
-    text-align: center;
-}
-
-.player2 img {
-    transform: scale(75%);
-}
-
+.player2,
 .player3 {
-    font-size: 25px;
     color: rgb(238, 210, 2);
-    text-align: center;
 }
 
+.player1 img,
+.player2 img,
 .player3 img {
-    transform: scale(75%);
+    width: clamp(60px, 15vw, 100px);
+    height: auto;
 }
 
 .info {
-    color: rgb(173,162, 162);
+    color: rgb(173, 162, 162);
     text-align: center;
-    font-size: 50px;
+    font-size: clamp(28px, 6vw, 50px);
     background-color: transparent;
+    margin: 1rem 0;
 }
 
 .start {
     background-color: rgb(40, 43, 43);
     color: rgb(136, 8, 8);
-    font-size: 40px;
+    font-size: clamp(24px, 5vw, 40px);
     transition-duration: 0.4s;
+    padding: 0.5em 1.5em;
+    border: 2px solid rgb(136, 8, 8);
+    cursor: pointer;
 }
 
 .start:hover {
     background-color: rgb(136, 8, 8);
-    color: rgb(40, 43, 43)
+    color: rgb(40, 43, 43);
 }
 
 .message {
     padding: 0.25em;
-    font-size: 50px;
+    font-size: clamp(28px, 6vw, 50px);
     text-align: center;
+}
+
+@media (max-width: 480px) {
+    .container {
+        gap: 0.5rem;
+    }
+
+    .player1 img,
+    .player2 img,
+    .player3 img {
+        width: clamp(50px, 20vw, 80px);
+    }
 }
