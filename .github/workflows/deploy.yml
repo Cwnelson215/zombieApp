@@ -51,7 +51,7 @@ jobs:
           scp -r -i ~/.ssh/deploy_key build/* ubuntu@$HOST:services/$SERVICE
 
           # Install dependencies and restart service
-          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "cd services/${SERVICE} && npm install && pm2 restart ${SERVICE}"
+          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "bash -l -c 'cd services/${SERVICE} && npm install --production && pm2 restart ${SERVICE}'"
 
       - name: Cleanup
         if: always()
