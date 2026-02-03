@@ -43,12 +43,16 @@ jobs:
         env:
           HOST: ${{ secrets.DEPLOY_HOST }}
           SERVICE: ${{ secrets.SERVICE_NAME }}
+          DB_CONFIG: ${{ secrets.DB_CONFIG }}
         run: |
           # Clear previous deployment
           ssh -i ~/.ssh/deploy_key ubuntu@$HOST "rm -rf services/${SERVICE} && mkdir -p services/${SERVICE}"
 
           # Copy new build
           scp -r -i ~/.ssh/deploy_key build/* ubuntu@$HOST:services/$SERVICE
+
+          # Create database config from secret
+          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "echo '${DB_CONFIG}' > services/${SERVICE}/dbConfig.json"
 
           # Install dependencies and restart service
           ssh -i ~/.ssh/deploy_key ubuntu@$HOST "source ~/.nvm/nvm.sh && cd services/${SERVICE} && npm install --production && pm2 restart ${SERVICE}"
