@@ -153,11 +153,9 @@ export function Running() {
             <p className="i_count">Infected: {infectedPlayers.length}</p>
             <div className="infected">
                 {infectedPlayers.map(player => (
-                    <div key={player.authToken} className={player.authToken === authToken ? 'survivor1' : ''}>
+                    <div key={player.authToken}>
                         <img alt="player avatar" src={`/images/pic${player.profilePic}.jpeg`} />
-                        <p className="player">
-                            {player.authToken === authToken ? <strong>{player.name}</strong> : player.name}
-                        </p>
+                        <p className="player">{player.name}</p>
                     </div>
                 ))}
             </div>

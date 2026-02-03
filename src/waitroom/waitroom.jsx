@@ -88,7 +88,7 @@ export function Waitroom() {
             <p className="Players-ready">Players Ready:</p>
             <div className="container">
                 {players.map((player, index) => (
-                    <div key={player.authToken || index} className={`player${index + 1}`}>
+                    <div key={player.authToken || index} className={player.authToken === authToken ? 'current-player' : 'other-player'}>
                         <img alt="player avatar" src={`/images/pic${player.profilePic}.jpeg`} />
                         <p className="player"><strong>{player.name}</strong></p>
                     </div>

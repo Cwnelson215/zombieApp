@@ -64,27 +64,24 @@ main {
     max-width: 600px;
 }
 
-.player1,
-.player2,
-.player3 {
+.current-player,
+.other-player {
     font-size: clamp(16px, 3vw, 25px);
     text-align: center;
     flex: 0 0 auto;
     min-width: 80px;
 }
 
-.player1 {
-    color: rgb(136, 8, 8);
+.current-player {
+    color: rgb(250, 250, 250);
 }
 
-.player2,
-.player3 {
-    color: rgb(238, 210, 2);
+.other-player {
+    color: rgb(173, 162, 162);
 }
 
-.player1 img,
-.player2 img,
-.player3 img {
+.current-player img,
+.other-player img {
     width: clamp(60px, 15vw, 100px);
     height: auto;
 }
@@ -135,9 +132,8 @@ main {
         gap: 0.5rem;
     }
 
-    .player1 img,
-    .player2 img,
-    .player3 img {
+    .current-player img,
+    .other-player img {
         width: clamp(50px, 20vw, 80px);
     }
 }
