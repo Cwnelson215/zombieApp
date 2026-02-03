@@ -1,0 +1,58 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Prepare deployment package
+        run: |
+          mkdir -p build/public
+          cp -rf dist/* build/public/
+          cp service/*.js build/
+          cp service/*.json build/
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          SERVICE: ${{ secrets.SERVICE_NAME }}
+        run: |
+          # Clear previous deployment
+          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "rm -rf services/${SERVICE} && mkdir -p services/${SERVICE}"
+
+          # Copy new build
+          scp -r -i ~/.ssh/deploy_key build/* ubuntu@$HOST:services/$SERVICE
+
+          # Install dependencies and restart service
+          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "cd services/${SERVICE} && npm install && pm2 restart ${SERVICE}"
+
+      - name: Cleanup
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
