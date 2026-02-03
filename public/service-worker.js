@@ -1,9 +1,31 @@
 // Service Worker for Push Notifications
 
-self.addEventListener('push', (event) => {
-  if (!event.data) return;
+self.addEventListener('install', (event) => {
+  console.log('[Service Worker] Installing...');
+  self.skipWaiting();
+});
 
-  const data = event.data.json();
+self.addEventListener('activate', (event) => {
+  console.log('[Service Worker] Activating...');
+  event.waitUntil(clients.claim());
+});
+
+self.addEventListener('push', (event) => {
+  console.log('[Service Worker] Push received:', event);
+
+  if (!event.data) {
+    console.log('[Service Worker] No data in push event');
+    return;
+  }
+
+  let data;
+  try {
+    data = event.data.json();
+    console.log('[Service Worker] Push data:', data);
+  } catch (e) {
+    console.error('[Service Worker] Failed to parse push data:', e);
+    return;
+  }
 
   const options = {
     body: data.body,
@@ -17,6 +39,8 @@ self.addEventListener('push', (event) => {
 
   event.waitUntil(
     self.registration.showNotification(data.title, options)
+      .then(() => console.log('[Service Worker] Notification shown'))
+      .catch((err) => console.error('[Service Worker] Failed to show notification:', err))
   );
 });
 

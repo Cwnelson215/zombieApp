@@ -15,6 +15,10 @@ if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
     process.env.VAPID_PUBLIC_KEY,
     process.env.VAPID_PRIVATE_KEY
   );
+  console.log('[Push] Web push configured with VAPID keys');
+} else {
+  console.warn('[Push] WARNING: VAPID keys not configured! Push notifications will not work.');
+  console.warn('[Push] Make sure VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY are set in .env');
 }
 
 const app = express();
@@ -108,11 +112,16 @@ apiRouter.get('/push/vapidPublicKey', (req, res) => {
 // Subscribe to push notifications
 apiRouter.post('/push/subscribe', async (req, res) => {
   const { joinCode, authToken, subscription } = req.body;
+  console.log('[Push] Subscribe request:', { joinCode, authToken, hasSubscription: !!subscription });
+
   if (!joinCode || !authToken || !subscription) {
+    console.log('[Push] Missing required fields');
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   const success = await savePushSubscription(joinCode, authToken, subscription);
+  console.log('[Push] Subscription saved:', success);
+
   if (success) {
     res.json({ success: true });
   } else {
@@ -133,14 +142,24 @@ apiRouter.post('/push/unsubscribe', async (req, res) => {
 
 // Helper function to send push notifications
 async function sendPushNotifications(joinCode, excludeAuthToken, payload) {
-  const subscriptions = await getPushSubscriptionsForGame(joinCode, excludeAuthToken);
+  console.log('[Push] Sending notifications for game:', joinCode, 'excluding:', excludeAuthToken);
 
-  const notifications = subscriptions.map(async ({ subscription }) => {
+  const subscriptions = await getPushSubscriptionsForGame(joinCode, excludeAuthToken);
+  console.log('[Push] Found subscriptions:', subscriptions.length);
+
+  if (subscriptions.length === 0) {
+    console.log('[Push] No subscriptions to send to');
+    return;
+  }
+
+  const notifications = subscriptions.map(async ({ subscription, playerName }) => {
     try {
-      await webpush.sendNotification(subscription, JSON.stringify(payload));
+      console.log('[Push] Sending to player:', playerName);
+      const result = await webpush.sendNotification(subscription, JSON.stringify(payload));
+      console.log('[Push] Sent successfully to:', playerName, result.statusCode);
     } catch (error) {
-      console.log('Push notification failed:', error.message);
-      // If subscription is invalid, we could clean it up here
+      console.log('[Push] Failed for player:', playerName, error.message, error.statusCode);
+      // If subscription is invalid (410 Gone), we could clean it up here
     }
   });
 

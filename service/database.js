@@ -113,10 +113,12 @@ function generateAuthToken() {
 }
 
 export async function savePushSubscription(joinCode, authToken, subscription) {
+    console.log('[DB] Saving push subscription for:', joinCode, authToken);
     const result = await gameCollection.updateOne(
         { joinCode: joinCode, "players.authToken": authToken },
         { $set: { "players.$.pushSubscription": subscription } }
     );
+    console.log('[DB] Save result - matched:', result.matchedCount, 'modified:', result.modifiedCount);
     return result.matchedCount > 0;
 }
 
@@ -129,14 +131,24 @@ export async function removePushSubscription(joinCode, authToken) {
 }
 
 export async function getPushSubscriptionsForGame(joinCode, excludeAuthToken) {
+    console.log('[DB] Getting push subscriptions for game:', joinCode, 'excluding:', excludeAuthToken);
     const game = await gameCollection.findOne({ joinCode: joinCode });
-    if (!game) return [];
+    if (!game) {
+        console.log('[DB] Game not found');
+        return [];
+    }
 
-    return game.players
+    const playersWithSubs = game.players.filter(p => p.pushSubscription);
+    console.log('[DB] Players with subscriptions:', playersWithSubs.length, 'of', game.players.length);
+
+    const result = game.players
         .filter(p => p.authToken !== excludeAuthToken && p.pushSubscription)
         .map(p => ({
             subscription: p.pushSubscription,
             playerName: p.name
         }));
+
+    console.log('[DB] Returning subscriptions:', result.length);
+    return result;
 }
 

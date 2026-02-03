@@ -43,8 +43,10 @@ export function isPushSupported() {
 
 // Subscribe to push notifications
 export async function subscribeToPush(joinCode, authToken) {
+  console.log('[Push] Starting subscription for:', joinCode, authToken);
+
   if (!isPushSupported()) {
-    console.log('Push notifications not supported on this device');
+    console.log('[Push] Push notifications not supported on this device');
     return false;
   }
 
@@ -52,38 +54,46 @@ export async function subscribeToPush(joinCode, authToken) {
     // Request notification permission first
     const permissionGranted = await requestNotificationPermission();
     if (!permissionGranted) {
-      console.log('Notification permission not granted');
+      console.log('[Push] Notification permission not granted');
       return false;
     }
+    console.log('[Push] Permission granted');
 
     // Get VAPID public key from server
     const response = await fetch('/api/push/vapidPublicKey');
     const { publicKey } = await response.json();
+    console.log('[Push] Got VAPID key:', publicKey ? 'yes' : 'no');
 
     if (!publicKey) {
-      console.log('VAPID public key not configured on server');
+      console.log('[Push] VAPID public key not configured on server');
       return false;
     }
 
     // Get service worker registration
+    console.log('[Push] Waiting for service worker...');
     const registration = await navigator.serviceWorker.ready;
+    console.log('[Push] Service worker ready:', registration.scope);
 
     // Check for existing subscription
     let subscription = await registration.pushManager.getSubscription();
+    console.log('[Push] Existing subscription:', subscription ? 'yes' : 'no');
 
     if (!subscription) {
       // Convert VAPID key to Uint8Array
       const applicationServerKey = urlBase64ToUint8Array(publicKey);
 
       // Subscribe to push
+      console.log('[Push] Creating new subscription...');
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey
       });
+      console.log('[Push] New subscription created');
     }
 
     // Send subscription to server
-    await fetch('/api/push/subscribe', {
+    console.log('[Push] Sending subscription to server...');
+    const subscribeResponse = await fetch('/api/push/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -92,11 +102,13 @@ export async function subscribeToPush(joinCode, authToken) {
         subscription: subscription.toJSON()
       })
     });
+    const result = await subscribeResponse.json();
+    console.log('[Push] Server response:', result);
 
-    console.log('Push subscription successful');
+    console.log('[Push] Subscription successful');
     return true;
   } catch (error) {
-    console.error('Push subscription failed:', error);
+    console.error('[Push] Subscription failed:', error);
     return false;
   }
 }
