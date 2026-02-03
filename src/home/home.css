@@ -60,11 +60,3 @@ main{
 .join:hover {
     background-color: rgb(136, 8, 8);
 }
-
-.fact {
-    text-align: center;
-    color: rgb(136, 8, 8);
-    padding: 1em;
-    transition-duration: 0.4s;
-    font-size: 30px;
-}

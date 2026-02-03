@@ -4,7 +4,6 @@ import './home.css';
 
 export function Home() {
     const navigate = useNavigate();
-    const [catFact, setcatFact] = React.useState("");
     const createGame = (event) => {
         navigate('/create')
     }
@@ -13,16 +12,6 @@ export function Home() {
         navigate(`/game/enter`)
     }
 
-    const getCatFact = async () => {
-        let res = await fetch('https://meowfacts.herokuapp.com/')
-        res = await res.json()
-        setcatFact(res.data[0])
-    }
-
-    React.useEffect(() => {
-        getCatFact()
-    }
-    ,[])
 
     return (
         <main>
@@ -35,9 +24,6 @@ export function Home() {
                     <button className="create" onClick={createGame}>Create Game</button>
                 </div>
                 <button className="join" onClick={joinGame}>Join Game</button>
-            </div>
-            <div className="cfact">
-                <p className="fact">{catFact}</p>
             </div>
         </main>
     )
