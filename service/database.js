@@ -112,3 +112,31 @@ function generateAuthToken() {
     return token
 }
 
+export async function savePushSubscription(joinCode, authToken, subscription) {
+    const result = await gameCollection.updateOne(
+        { joinCode: joinCode, "players.authToken": authToken },
+        { $set: { "players.$.pushSubscription": subscription } }
+    );
+    return result.matchedCount > 0;
+}
+
+export async function removePushSubscription(joinCode, authToken) {
+    const result = await gameCollection.updateOne(
+        { joinCode: joinCode, "players.authToken": authToken },
+        { $unset: { "players.$.pushSubscription": "" } }
+    );
+    return result.matchedCount > 0;
+}
+
+export async function getPushSubscriptionsForGame(joinCode, excludeAuthToken) {
+    const game = await gameCollection.findOne({ joinCode: joinCode });
+    if (!game) return [];
+
+    return game.players
+        .filter(p => p.authToken !== excludeAuthToken && p.pushSubscription)
+        .map(p => ({
+            subscription: p.pushSubscription,
+            playerName: p.name
+        }));
+}
+

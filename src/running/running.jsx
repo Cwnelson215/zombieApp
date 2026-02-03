@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './game_running.css';
 import { useSocket } from '../socket/SocketContext';
 import { InfectionToast } from '../components/InfectionToast';
-import { requestNotificationPermission, sendBrowserNotification } from '../utils/notifications';
+import { requestNotificationPermission, subscribeToPush, isPushSupported } from '../utils/notifications';
 
 export function Running() {
     const { joinCode } = useParams();
@@ -20,7 +20,6 @@ export function Running() {
     const [ones, setOnes] = useState(0);
     const [showMessage, setShowMessage] = useState(false);
     const [toastData, setToastData] = useState(null);
-    const [isTabVisible, setIsTabVisible] = useState(true);
 
     const fetchPlayers = useCallback(async () => {
         const response = await fetch('/api/game/getPlayers', {
@@ -37,15 +36,17 @@ export function Running() {
     }, [joinCode, authToken]);
 
     useEffect(() => {
-        requestNotificationPermission();
-        fetchPlayers();
-
-        const handleVisibilityChange = () => {
-            setIsTabVisible(document.visibilityState === 'visible');
+        // Request notification permission and subscribe to push if supported
+        const setupNotifications = async () => {
+            const permissionGranted = await requestNotificationPermission();
+            if (permissionGranted && isPushSupported()) {
+                // Subscribe to push notifications for background delivery (Android/Desktop)
+                await subscribeToPush(joinCode, authToken);
+            }
         };
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-    }, [fetchPlayers]);
+        setupNotifications();
+        fetchPlayers();
+    }, [fetchPlayers, joinCode, authToken]);
 
     useEffect(() => {
         if (!socket || !joinCode) return;
@@ -57,16 +58,10 @@ export function Running() {
                 p.authToken === changedAuthToken ? { ...p, status: newStatus } : p
             ));
 
+            // Show in-app toast for other players' status changes
+            // Push notifications are handled server-side for background delivery
             if (changedAuthToken !== authToken) {
                 setToastData({ playerName, isInfected: newStatus });
-
-                if (!isTabVisible) {
-                    const statusText = newStatus ? 'infected' : 'cured';
-                    sendBrowserNotification(
-                        'Infection Alert!',
-                        `${playerName} has been ${statusText}!`
-                    );
-                }
             }
         };
 
@@ -75,7 +70,7 @@ export function Running() {
         return () => {
             socket.off('player-infected', handlePlayerInfected);
         };
-    }, [socket, joinCode, authToken, isTabVisible]);
+    }, [socket, joinCode, authToken]);
 
     const handleInfection = () => {
         if (!socket || !currentPlayer) return;

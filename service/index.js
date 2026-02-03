@@ -1,10 +1,21 @@
+import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
-import {createGame, addPlayer, findGame, findPlayer, updatePlayerStatus} from "./database.js"
+import webpush from 'web-push';
+import {createGame, addPlayer, findGame, findPlayer, updatePlayerStatus, savePushSubscription, removePushSubscription, getPushSubscriptionsForGame} from "./database.js"
+
+// Configure web-push with VAPID keys
+if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  webpush.setVapidDetails(
+    process.env.VAPID_EMAIL || 'mailto:admin@example.com',
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+}
 
 const app = express();
 const httpServer = createServer(app);
@@ -86,8 +97,55 @@ apiRouter.post('/game/getPlayers', async (req, res) => {
       players: game.players
     });
   }
-  
-}); 
+
+});
+
+// Get VAPID public key for push subscription
+apiRouter.get('/push/vapidPublicKey', (req, res) => {
+  res.json({ publicKey: process.env.VAPID_PUBLIC_KEY || null });
+});
+
+// Subscribe to push notifications
+apiRouter.post('/push/subscribe', async (req, res) => {
+  const { joinCode, authToken, subscription } = req.body;
+  if (!joinCode || !authToken || !subscription) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const success = await savePushSubscription(joinCode, authToken, subscription);
+  if (success) {
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Player not found' });
+  }
+});
+
+// Unsubscribe from push notifications
+apiRouter.post('/push/unsubscribe', async (req, res) => {
+  const { joinCode, authToken } = req.body;
+  if (!joinCode || !authToken) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const success = await removePushSubscription(joinCode, authToken);
+  res.json({ success });
+});
+
+// Helper function to send push notifications
+async function sendPushNotifications(joinCode, excludeAuthToken, payload) {
+  const subscriptions = await getPushSubscriptionsForGame(joinCode, excludeAuthToken);
+
+  const notifications = subscriptions.map(async ({ subscription }) => {
+    try {
+      await webpush.sendNotification(subscription, JSON.stringify(payload));
+    } catch (error) {
+      console.log('Push notification failed:', error.message);
+      // If subscription is invalid, we could clean it up here
+    }
+  });
+
+  await Promise.allSettled(notifications);
+} 
 
 // Default error handler
 app.use(function (err, req, res, next) {
@@ -147,6 +205,15 @@ io.on('connection', (socket) => {
         authToken: authToken
       });
       console.log(`Player ${player.name} infection status changed to ${newStatus} in game ${joinCode}`);
+
+      // Send push notifications to other players
+      const statusText = newStatus ? 'infected' : 'cured';
+      await sendPushNotifications(joinCode, authToken, {
+        title: 'Infection Alert!',
+        body: `${player.name} has been ${statusText}!`,
+        icon: '/images/pic1.jpeg',
+        tag: 'infection-notification'
+      });
     }
   });
 
