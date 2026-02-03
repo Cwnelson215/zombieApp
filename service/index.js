@@ -1,10 +1,19 @@
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
-import {createGame, addPlayer, findGame, findPlayer} from "./database.js"
+import {createGame, addPlayer, findGame, findPlayer, updatePlayerStatus} from "./database.js"
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["http://localhost:5173", "http://localhost:4173"],
+    methods: ["GET", "POST"]
+  }
+});
 
 const authCookieName = 'token';
 const fontendPath = 'public';
@@ -120,6 +129,36 @@ function setAuthCookie(res, authToken) {
   });
 }
 
-app.listen(port, () => {
+// Socket.io connection handling
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+
+  socket.on('join-game', (joinCode) => {
+    socket.join(joinCode);
+    console.log(`Socket ${socket.id} joined game room: ${joinCode}`);
+  });
+
+  socket.on('infection-update', async ({ joinCode, authToken, newStatus }) => {
+    const player = await updatePlayerStatus(joinCode, authToken, newStatus);
+    if (player) {
+      io.to(joinCode).emit('player-infected', {
+        playerName: player.name,
+        newStatus: newStatus,
+        authToken: authToken
+      });
+      console.log(`Player ${player.name} infection status changed to ${newStatus} in game ${joinCode}`);
+    }
+  });
+
+  socket.on('player-joined', (joinCode) => {
+    socket.to(joinCode).emit('player-list-updated');
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+});
+
+httpServer.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });

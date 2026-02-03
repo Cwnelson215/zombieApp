@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './join.css'
 import {useNavigate, useParams} from 'react-router-dom';
+import { useSocket } from '../socket/SocketContext';
 
 export function Join() {
     const navigate = useNavigate();
     const { joinCode } = useParams();
-    const [selectedPicture, setSelectedPicture] = React.useState(null);
-    const [nickname, setNickname] = React.useState('');
-    const [checkingGame, setCheckingGame] = React.useState(true);
-    const [checkingGameError, setCheckingGameError] = React.useState(false)
+    const socket = useSocket();
+    const [selectedPicture, setSelectedPicture] = useState(null);
+    const [nickname, setNickname] = useState('');
+    const [checkingGame, setCheckingGame] = useState(true);
+    const [checkingGameError, setCheckingGameError] = useState(false)
     
     useEffect(() => {
         const checkGame = async ()=> {
@@ -43,11 +45,7 @@ export function Join() {
         navigate("/game/enter")
     }
     
-    const profilePictures = [
-        '/images/pic1.jpeg',
-        '/images/pic2.jpeg',
-        '/images/pic3.jpeg',
-    ];
+    const profilePictures = [1, 2, 3];
 
     const handlePictureSelect = (picture) => {
         setSelectedPicture(picture);
@@ -80,6 +78,9 @@ export function Join() {
                 let res  = await response.json();
                 let authToken = res.authToken;
                 localStorage.setItem("authToken", authToken);
+                if (socket) {
+                    socket.emit('player-joined', joinCode);
+                }
                 navigate(`/game/${joinCode}/waitroom`);
             } else {
                 const errorData = await response.json();
@@ -118,16 +119,16 @@ export function Join() {
 
             <p className='prompt'>Choose Profile Picture and Enter Nickname</p>
             <div className="pictures">
-                {profilePictures.map((picture, index) => (
+                {profilePictures.map((picNum) => (
                     <div
-                        key={index}
-                        className={`picture-${index} ${selectedPicture === picture ? 'selected' : ''}`}
-                        onClick={() => handlePictureSelect(picture)}
+                        key={picNum}
+                        className={`picture-${picNum - 1} ${selectedPicture === picNum ? 'selected' : ''}`}
+                        onClick={() => handlePictureSelect(picNum)}
                     >
                         <img
-                            src={picture}
-                            alt={`Profile ${index + 1}`}
-                            className={`picture-${index}`}
+                            src={`/images/pic${picNum}.jpeg`}
+                            alt={`Profile ${picNum}`}
+                            className={`picture-${picNum - 1}`}
                         />
                     </div>
                 ))}

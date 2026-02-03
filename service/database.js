@@ -79,6 +79,19 @@ export async function findPlayer(authToken) {
     }
 }
 
+export async function updatePlayerStatus(joinCode, authToken, newStatus) {
+    const result = await gameCollection.updateOne(
+        { joinCode: joinCode, "players.authToken": authToken },
+        { $set: { "players.$.status": newStatus } }
+    );
+    if (result.matchedCount === 0) {
+        console.log(`No player found with authToken '${authToken}' in game '${joinCode}'`);
+        return null;
+    }
+    const player = await findPlayer(authToken);
+    return player;
+}
+
 function generateJoinCode() {
     const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let token = '';

@@ -4,22 +4,23 @@
     "description": "This demonstrates a service for a web application.",
     "main": "index.js",
     "scripts": {
-      "start": "node index.js",
-      "watch": "nodemon index.js"
+        "start": "node index.js",
+        "watch": "nodemon index.js"
     },
     "author": "",
     "license": "MIT",
     "type": "module",
     "dependencies": {
-      "bcryptjs": "^3.0.2",
-      "mongodb": "^6.15.0",
-      "cookie-parser": "^1.4.7",
-      "express": "^4.21.2",
-      "uuid": "^11.0.5"
-    }, 
+        "bcryptjs": "^3.0.2",
+        "cookie-parser": "^1.4.7",
+        "express": "^4.21.2",
+        "mongodb": "^6.15.0",
+        "socket.io": "^4.8.3",
+        "socket.io-client": "^4.8.3",
+        "uuid": "^11.0.5"
+    },
     "proxy": "http://localhost:3001",
     "devDependencies": {
-      "nodemon": "^2.0.15"
+        "nodemon": "^2.0.15"
     }
-  }
-  
+}

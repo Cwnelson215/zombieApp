@@ -1,0 +1,58 @@
+.infection-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  font-family: "Bebas Neue", serif;
+  transition: transform 0.3s ease-out;
+  max-width: 90vw;
+}
+
+.infection-toast.visible {
+  transform: translateX(-50%) translateY(0);
+}
+
+.infection-toast.infected {
+  background: linear-gradient(135deg, rgb(136, 8, 8), rgb(80, 5, 5));
+  border: 2px solid rgb(238, 210, 2);
+}
+
+.infection-toast.cured {
+  background: linear-gradient(135deg, rgb(34, 139, 34), rgb(20, 80, 20));
+  border: 2px solid rgb(144, 238, 144);
+}
+
+.toast-icon {
+  font-size: 32px;
+}
+
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toast-player {
+  font-size: clamp(18px, 4vw, 24px);
+  color: white;
+  font-weight: bold;
+}
+
+.toast-status {
+  font-size: clamp(14px, 3vw, 18px);
+}
+
+.infection-toast.infected .toast-status {
+  color: rgb(238, 210, 2);
+}
+
+.infection-toast.cured .toast-status {
+  color: rgb(144, 238, 144);
+}
