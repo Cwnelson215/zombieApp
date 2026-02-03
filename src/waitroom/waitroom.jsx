@@ -8,8 +8,12 @@ import { requestNotificationPermission } from '../utils/notifications';
 export function Waitroom() {
     const { joinCode } = useParams();
     const [players, setPlayers] = useState([]);
+    const [isOwner, setIsOwner] = useState(localStorage.getItem("isOwner") === "true");
+    const [ownerAuthToken, setOwnerAuthToken] = useState(null);
+    const [starting, setStarting] = useState(false);
     const navigate = useNavigate();
     const socket = useSocket();
+    const authToken = localStorage.getItem("authToken");
 
     const fetchPlayers = useCallback(async () => {
         const res = await fetch("/api/game/getPlayers", {
@@ -19,7 +23,9 @@ export function Waitroom() {
         });
         const data = await res.json();
         setPlayers(data.players);
-    }, [joinCode]);
+        setOwnerAuthToken(data.ownerAuthToken);
+        setIsOwner(data.ownerAuthToken === authToken);
+    }, [joinCode, authToken]);
 
     useEffect(() => {
         requestNotificationPermission();
@@ -29,16 +35,51 @@ export function Waitroom() {
     useEffect(() => {
         if (!socket || !joinCode) return;
 
-        socket.emit('join-game', joinCode);
+        socket.emit('join-game', joinCode, authToken);
 
         socket.on('player-list-updated', () => {
             fetchPlayers();
         });
 
+        socket.on('game-started', ({ firstInfectedAuthToken, firstInfectedName }) => {
+            localStorage.setItem("firstInfectedAuthToken", firstInfectedAuthToken);
+            localStorage.setItem("firstInfectedName", firstInfectedName);
+            navigate(`/game/${joinCode}/running`);
+        });
+
+        socket.on('owner-changed', ({ newOwnerAuthToken, newOwnerName }) => {
+            setOwnerAuthToken(newOwnerAuthToken);
+            setIsOwner(newOwnerAuthToken === authToken);
+            console.log(`New owner: ${newOwnerName}`);
+        });
+
         return () => {
             socket.off('player-list-updated');
+            socket.off('game-started');
+            socket.off('owner-changed');
         };
-    }, [socket, joinCode, fetchPlayers]);
+    }, [socket, joinCode, authToken, fetchPlayers, navigate]);
+
+    const handleStartGame = async () => {
+        if (starting) return;
+        setStarting(true);
+        try {
+            const res = await fetch("/api/game/start", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ joinCode, authToken })
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                alert(data.error || 'Failed to start game');
+                setStarting(false);
+            }
+        } catch (error) {
+            console.error('Error starting game:', error);
+            alert('An error occurred while starting the game.');
+            setStarting(false);
+        }
+    };
 
     return (
         <main>
@@ -55,7 +96,13 @@ export function Waitroom() {
             </div>
             <p className="info"><strong>The Infected Player Will Be Chosen When The Game Starts</strong></p>
             <p className="message">Good Luck Survivors</p>
-            <button className="start" onClick={() => navigate(`/game/${joinCode}/running`)}>Start Game</button>
+            {isOwner ? (
+                <button className="start" onClick={handleStartGame} disabled={starting || players.length === 0}>
+                    {starting ? 'Starting...' : 'Start Game'}
+                </button>
+            ) : (
+                <p className="waiting-message">Waiting for host to start the game...</p>
+            )}
         </main>
     );
 }

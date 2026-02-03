@@ -138,10 +138,50 @@ main {
     margin: 0;
 }
 
+.patient-zero-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgb(136, 8, 8), rgb(80, 5, 5));
+    color: rgb(238, 210, 2);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 0 30px rgba(136, 8, 8, 0.8);
+    animation: pulseZombie 1s ease-in-out infinite;
+}
+
+.patient-zero-notification h2 {
+    font-family: 'zombie';
+    font-size: clamp(24px, 6vw, 40px);
+    margin: 0 0 1rem 0;
+}
+
+.patient-zero-notification p {
+    font-size: clamp(16px, 4vw, 24px);
+    margin: 0;
+}
+
+@keyframes pulseZombie {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
 @media (max-width: 480px) {
     .infected img,
     .survivor1 img,
     .survivor2 img {
         width: clamp(40px, 18vw, 60px);
+    }
+
+    .patient-zero-notification {
+        padding: 1.5rem;
+        width: 90%;
     }
 }

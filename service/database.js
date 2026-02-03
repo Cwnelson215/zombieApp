@@ -28,7 +28,9 @@ export async function createGame(length) {
             joinCode: joinCode,
             players: [],
             timer: length,
-            endTime: 0
+            endTime: 0,
+            ownerAuthToken: null,
+            status: 'waiting'
         }
     );
     return {
@@ -38,23 +40,33 @@ export async function createGame(length) {
 
 export async function addPlayer(joinCode, nickName, picNumber) {
     const result = await gameCollection.findOne({ joinCode: joinCode});
+    if (!result) {
+        console.log(`No game found with join code '${joinCode}`);
+        return { error: 'Game not found' };
+    }
+    if (result.status !== 'waiting') {
+        console.log(`Game '${joinCode}' has already started`);
+        return { error: 'Game has already started' };
+    }
     const authToken = generateAuthToken();
+    const isOwner = result.ownerAuthToken === null;
     const newPlayer = {
         name: nickName,
         profilePic: picNumber,
         status: false,
         authToken: authToken,
     }
-    if(result) {
-        await gameCollection.updateOne(
-            {joinCode: joinCode},
-            {$push: {players: newPlayer}}
-        );
-    } else {
-        console.log(`No game found with join code '${joinCode}`);
+    const updateFields = { $push: { players: newPlayer } };
+    if (isOwner) {
+        updateFields.$set = { ownerAuthToken: authToken };
     }
+    await gameCollection.updateOne(
+        { joinCode: joinCode },
+        updateFields
+    );
     return {
-        authToken
+        authToken,
+        isOwner
     }
 }
 
@@ -128,6 +140,68 @@ export async function removePushSubscription(joinCode, authToken) {
         { $unset: { "players.$.pushSubscription": "" } }
     );
     return result.matchedCount > 0;
+}
+
+export async function startGame(joinCode, authToken) {
+    const game = await gameCollection.findOne({ joinCode: joinCode });
+    if (!game) {
+        return { error: 'Game not found' };
+    }
+    if (game.ownerAuthToken !== authToken) {
+        return { error: 'Only the game owner can start the game' };
+    }
+    if (game.status !== 'waiting') {
+        return { error: 'Game has already started' };
+    }
+    if (game.players.length === 0) {
+        return { error: 'Cannot start game with no players' };
+    }
+    const randomIndex = Math.floor(Math.random() * game.players.length);
+    const firstInfected = game.players[randomIndex];
+    await gameCollection.updateOne(
+        { joinCode: joinCode, "players.authToken": firstInfected.authToken },
+        {
+            $set: {
+                "players.$.status": true,
+                status: 'running'
+            }
+        }
+    );
+    return {
+        success: true,
+        firstInfected: {
+            name: firstInfected.name,
+            authToken: firstInfected.authToken
+        }
+    };
+}
+
+export async function transferOwner(joinCode, currentOwnerAuthToken) {
+    const game = await gameCollection.findOne({ joinCode: joinCode });
+    if (!game) {
+        return { error: 'Game not found' };
+    }
+    const remainingPlayers = game.players.filter(p => p.authToken !== currentOwnerAuthToken);
+    if (remainingPlayers.length === 0) {
+        return { error: 'No players to transfer ownership to' };
+    }
+    const newOwner = remainingPlayers[0];
+    await gameCollection.updateOne(
+        { joinCode: joinCode },
+        { $set: { ownerAuthToken: newOwner.authToken } }
+    );
+    return {
+        success: true,
+        newOwnerAuthToken: newOwner.authToken,
+        newOwnerName: newOwner.name
+    };
+}
+
+export async function findGameByPlayerAuth(authToken) {
+    const result = await gameCollection.findOne({
+        players: { $elemMatch: { authToken: authToken } }
+    });
+    return result;
 }
 
 export async function getPushSubscriptionsForGame(joinCode, excludeAuthToken) {

@@ -20,6 +20,7 @@ export function Running() {
     const [ones, setOnes] = useState(0);
     const [showMessage, setShowMessage] = useState(false);
     const [toastData, setToastData] = useState(null);
+    const [showPatientZero, setShowPatientZero] = useState(false);
 
     const fetchPlayers = useCallback(async () => {
         const response = await fetch('/api/game/getPlayers', {
@@ -46,6 +47,15 @@ export function Running() {
         };
         setupNotifications();
         fetchPlayers();
+
+        // Check if this player is Patient Zero
+        const firstInfectedAuthToken = localStorage.getItem("firstInfectedAuthToken");
+        if (firstInfectedAuthToken === authToken) {
+            setShowPatientZero(true);
+            localStorage.removeItem("firstInfectedAuthToken");
+            localStorage.removeItem("firstInfectedName");
+            setTimeout(() => setShowPatientZero(false), 5000);
+        }
     }, [fetchPlayers, joinCode, authToken]);
 
     useEffect(() => {
@@ -119,6 +129,13 @@ export function Running() {
 
     return (
         <main>
+            {showPatientZero && (
+                <div className="patient-zero-notification">
+                    <h2>🧟 You are Patient Zero! 🧟</h2>
+                    <p>You are the first infected. Go spread the infection!</p>
+                </div>
+            )}
+
             {toastData && (
                 <InfectionToast
                     playerName={toastData.playerName}

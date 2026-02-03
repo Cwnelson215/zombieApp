@@ -112,6 +112,18 @@ main {
     color: rgb(40, 43, 43);
 }
 
+.start:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.waiting-message {
+    color: rgb(173, 162, 162);
+    font-size: clamp(20px, 4vw, 30px);
+    text-align: center;
+    font-style: italic;
+}
+
 .message {
     padding: 0.25em;
     font-size: clamp(28px, 6vw, 50px);

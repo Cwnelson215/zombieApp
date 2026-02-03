@@ -78,6 +78,7 @@ export function Join() {
                 let res  = await response.json();
                 let authToken = res.authToken;
                 localStorage.setItem("authToken", authToken);
+                localStorage.setItem("isOwner", res.isOwner);
                 if (socket) {
                     socket.emit('player-joined', joinCode);
                 }

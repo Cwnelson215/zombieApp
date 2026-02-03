@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import webpush from 'web-push';
-import {createGame, addPlayer, findGame, findPlayer, updatePlayerStatus, savePushSubscription, removePushSubscription, getPushSubscriptionsForGame} from "./database.js"
+import {createGame, addPlayer, findGame, findPlayer, updatePlayerStatus, savePushSubscription, removePushSubscription, getPushSubscriptionsForGame, startGame, transferOwner, findGameByPlayerAuth} from "./database.js"
 
 // Configure web-push with VAPID keys
 if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
@@ -78,9 +78,14 @@ apiRouter.post('/player/add', async (req, res) => {
         return;
     }
     const player = await addPlayer(req.body.joinCode, req.body.nickname, req.body.profilePicture);
+    if (player.error) {
+        res.status(400).send({ msg: player.error });
+        return;
+    }
     res.json({
         joinCode: game.joinCode,
-        authToken: player.authToken
+        authToken: player.authToken,
+        isOwner: player.isOwner
     });
 });
 
@@ -95,13 +100,30 @@ apiRouter.post('/game/check' , async (req, res) => {
 apiRouter.post('/game/getPlayers', async (req, res) => {
   const game = await findGame(req.body.joinCode)
   if(!game){
-    res.status(404)
+    res.status(404).send({ msg: 'Game not found' });
   } else{
     res.json({
-      players: game.players
+      players: game.players,
+      ownerAuthToken: game.ownerAuthToken,
+      status: game.status
     });
   }
+});
 
+apiRouter.post('/game/start', async (req, res) => {
+  const { joinCode, authToken } = req.body;
+  if (!joinCode || !authToken) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  const result = await startGame(joinCode, authToken);
+  if (result.error) {
+    return res.status(400).json({ error: result.error });
+  }
+  io.to(joinCode).emit('game-started', {
+    firstInfectedAuthToken: result.firstInfected.authToken,
+    firstInfectedName: result.firstInfected.name
+  });
+  res.json(result);
 });
 
 // Get VAPID public key for push subscription
@@ -210,9 +232,11 @@ function setAuthCookie(res, authToken) {
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
-  socket.on('join-game', (joinCode) => {
+  socket.on('join-game', (joinCode, authToken) => {
     socket.join(joinCode);
-    console.log(`Socket ${socket.id} joined game room: ${joinCode}`);
+    socket.joinCode = joinCode;
+    socket.authToken = authToken;
+    console.log(`Socket ${socket.id} joined game room: ${joinCode} with authToken: ${authToken}`);
   });
 
   socket.on('infection-update', async ({ joinCode, authToken, newStatus }) => {
@@ -240,8 +264,21 @@ io.on('connection', (socket) => {
     socket.to(joinCode).emit('player-list-updated');
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     console.log('Client disconnected:', socket.id);
+    if (socket.joinCode && socket.authToken) {
+      const game = await findGame(socket.joinCode);
+      if (game && game.status === 'waiting' && game.ownerAuthToken === socket.authToken) {
+        const result = await transferOwner(socket.joinCode, socket.authToken);
+        if (result.success) {
+          console.log(`Owner transferred in game ${socket.joinCode} to ${result.newOwnerName}`);
+          io.to(socket.joinCode).emit('owner-changed', {
+            newOwnerAuthToken: result.newOwnerAuthToken,
+            newOwnerName: result.newOwnerName
+          });
+        }
+      }
+    }
   });
 });
 
