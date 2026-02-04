@@ -1,18 +1,3 @@
-@font-face {
-    font-family: 'zombie';
-    src: url(fonts/zombie.otf) format("opentype")
-}
-
-.bebas-neue-regular {
-    font-family: "Bebas Neue", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-* {
-    font-family: 'Bebas Neue';
-}
-
 .joinCode {
     text-align: center;
     font-size: clamp(28px, 6vw, 45px);
@@ -43,56 +28,80 @@
     transform: none;
     cursor: pointer;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .pictures img {
     margin: 5px;
     width: clamp(80px, 20vw, 150px);
-    height: auto;
+    height: clamp(80px, 20vw, 150px);
     object-fit: cover;
+    border-radius: var(--radius-full);
+    border: 4px solid rgba(238, 210, 2, 0.3);
+    filter: grayscale(60%);
+    opacity: 0.7;
+    transition: filter var(--transition-base),
+                opacity var(--transition-base),
+                transform var(--transition-base),
+                border-color var(--transition-base),
+                box-shadow var(--transition-base);
 }
 
-.picture-0 img,
-.picture-1 img,
-.picture-2 img {
-    border: clamp(4px, 1vw, 10px) solid rgb(238, 210, 2);
-    transition-duration: 0.4s;
-}
-
-.picture-0 img:hover,
-.picture-1 img:hover,
-.picture-2 img:hover {
-    border-color: rgb(136, 8, 8);
+.pictures img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.08);
+    border-color: var(--color-gold);
 }
 
 .picture-0.selected img,
 .picture-1.selected img,
 .picture-2.selected img {
-    border-color: rgb(136, 8, 8);
+    filter: grayscale(0%);
+    opacity: 1;
+    border-color: var(--color-dark-red);
+    box-shadow: var(--shadow-glow-red);
+    transform: scale(1.05);
 }
 
 .ready {
     text-align: center;
     font-size: clamp(28px, 6vw, 50px);
     margin-top: clamp(20px, 4vh, 50px);
-    color: black;
-    background-color: rgb(238, 210, 2);
-    transition-duration: 0.4s;
+    color: var(--color-dark-gray);
+    background: var(--gradient-gold);
     padding: 0.5em 1.5em;
     border: none;
+    border-radius: var(--radius-md);
     cursor: pointer;
     display: block;
     margin-left: auto;
     margin-right: auto;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                background var(--transition-base);
 }
 
 .ready:hover {
-    background-color: rgb(136, 8, 8);
+    background: var(--gradient-red);
+    color: var(--color-gold);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-red);
+}
+
+.ready:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+}
+
+.ready:active {
+    transform: translateY(0) scale(0.98);
 }
 
 @media (max-width: 480px) {
     .pictures img {
         width: clamp(70px, 25vw, 100px);
+        height: clamp(70px, 25vw, 100px);
     }
 }

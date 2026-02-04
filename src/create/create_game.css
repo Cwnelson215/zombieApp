@@ -1,18 +1,3 @@
-@font-face {
-    font-family: 'zombie';
-    src: url(fonts/zombie.otf) format("opentype")
-}
-
-.bebas-neue-regular {
-    font-family: "Bebas Neue", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-* {
-    font-family: 'Bebas Neue';
-}
-
 main {
     padding: clamp(1.5rem, 5vw, 8rem);
     min-height: 0;
@@ -21,7 +6,6 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 5px solid rgb(0, 0, 0);
 }
 
 .question {
@@ -59,6 +43,18 @@ main {
     width: 100%;
     max-width: 150px;
     padding: 0.5em;
+    background: var(--surface-glass);
+    border: 2px solid rgba(238, 210, 2, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--color-gold);
+    transition: border-color var(--transition-base),
+                box-shadow var(--transition-base);
+}
+
+.timer_s input:focus {
+    outline: none;
+    border-color: var(--color-gold);
+    box-shadow: var(--shadow-glow-gold);
 }
 
 .timer_s p {
@@ -69,19 +65,35 @@ main {
 .n_button {
     text-align: center;
     font-size: clamp(36px, 7vw, 60px);
-    transition-duration: 0.4s;
-    background-color: rgb(238, 210, 2);
+    background: var(--gradient-gold);
+    color: var(--color-dark-gray);
     margin-top: clamp(30px, 5vh, 80px);
     padding: 0.5em 1.5em;
     border: none;
+    border-radius: var(--radius-md);
     cursor: pointer;
     width: 100%;
     max-width: 300px;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                background var(--transition-base);
 }
 
-.n_button:hover,
-.n_button input:hover {
-    background-color: rgb(136, 8, 8);
+.n_button:hover {
+    background: var(--gradient-red);
+    color: var(--color-gold);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-red);
+}
+
+.n_button:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+}
+
+.n_button:active {
+    transform: translateY(0) scale(0.98);
 }
 
 @media (max-width: 480px) {

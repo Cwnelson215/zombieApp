@@ -1,18 +1,3 @@
-@font-face {
-    font-family: 'zombie';
-    src: url(fonts/zombie.otf) format("opentype")
-}
-
-.bebas-neue-regular {
-    font-family: "Bebas Neue", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-* {
-    font-family: 'Bebas Neue';
-}
-
 .timer {
     font-family: "zombie";
 }
@@ -53,13 +38,28 @@ main {
     flex-wrap: wrap;
     justify-content: center;
     font-size: clamp(16px, 3vw, 25px);
-    color: rgb(136, 8, 8);
-    gap: 0.5rem;
+    color: var(--color-dark-red);
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+.infected > div {
+    padding: 0.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface-glass);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(136, 8, 8, 0.4);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
 }
 
 .infected img {
     width: clamp(50px, 12vw, 80px);
-    height: auto;
+    height: clamp(50px, 12vw, 80px);
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid var(--color-dark-red);
 }
 
 .s_count {
@@ -74,18 +74,44 @@ main {
     justify-content: center;
     text-align: center;
     font-size: clamp(16px, 3vw, 25px);
-    color: rgb(173, 162, 162);
-    gap: 0.5rem;
+    color: var(--color-light-gray);
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+.survivors > div {
+    padding: 0.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface-glass);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(173, 162, 162, 0.3);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base);
+}
+
+.survivors > div:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .survivor1 {
-    color: rgb(250, 250, 250);
+    color: var(--color-white);
+}
+
+.survivor1 {
+    border-color: var(--color-gold) !important;
+    box-shadow: var(--shadow-md), var(--shadow-glow-gold) !important;
 }
 
 .survivor1 img,
 .survivor2 img {
     width: clamp(50px, 12vw, 80px);
-    height: auto;
+    height: clamp(50px, 12vw, 80px);
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid currentColor;
 }
 
 .announce {
@@ -101,35 +127,57 @@ main {
 
 .announce button {
     font-size: clamp(20px, 4vw, 30px);
-    background-color: rgb(136, 8, 8);
-    transition-duration: 0.4s;
+    background: var(--gradient-red);
     font-family: "zombie";
     padding: 0.5em 1em;
     border: none;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    color: rgb(238, 210, 2);
+    color: var(--color-gold);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                background var(--transition-base);
 }
 
 .announce button:hover {
-    background-color: rgb(238, 210, 2);
-    color: rgb(136, 8, 8);
+    background: var(--gradient-gold);
+    color: var(--color-dark-red);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-gold);
+}
+
+.announce button:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
 }
 
 .end {
     font-size: clamp(18px, 4vw, 25px);
-    background-color: rgb(136, 8, 8);
-    color: rgb(238, 210, 2);
+    background: var(--gradient-red);
+    color: var(--color-gold);
     font-family: "zombie";
-    transition-duration: 0.4s;
     margin-top: 1rem;
     padding: 0.5em 1em;
     border: none;
+    border-radius: var(--radius-md);
     cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                background var(--transition-base);
 }
 
 .end:hover {
-    background-color: rgb(238, 210, 2);
-    color: rgb(136, 8, 8);
+    background: var(--gradient-gold);
+    color: var(--color-dark-red);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-gold);
+}
+
+.end:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
 }
 
 /* Game outcome overlay (zombies win / survivors win) */
@@ -144,7 +192,32 @@ main {
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--surface-overlay);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: overlayFadeIn 0.4s ease-out;
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(8px);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .game-outcome-overlay h1 {
@@ -152,28 +225,41 @@ main {
     font-size: clamp(60px, 15vw, 150px);
     text-align: center;
     margin: 0;
-    text-shadow: 0 0 20px currentColor;
+    text-shadow: 0 0 30px currentColor;
+    animation: slideInUp 0.5s ease-out 0.1s both;
 }
 
 .leave-game-btn {
     font-family: 'zombie';
     font-size: clamp(24px, 5vw, 40px);
-    background-color: rgb(136, 8, 8);
-    color: rgb(238, 210, 2);
+    background: var(--gradient-red);
+    color: var(--color-gold);
     padding: 0.5em 1.5em;
     border: none;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition-duration: 0.4s;
     margin-top: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                background var(--transition-base);
+    animation: slideInUp 0.5s ease-out 0.3s both;
 }
 
 .leave-game-btn:hover {
-    background-color: rgb(238, 210, 2);
-    color: rgb(136, 8, 8);
+    background: var(--gradient-gold);
+    color: var(--color-dark-red);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-gold);
+}
+
+.leave-game-btn:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
 }
 
 .game-outcome-overlay.zombies h1 {
-    color: rgb(136, 8, 8);
+    color: var(--color-dark-red);
 }
 
 .game-outcome-overlay.survivors h1 {
@@ -191,21 +277,28 @@ main {
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--surface-overlay);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: overlayFadeIn 0.3s ease-out;
 }
 
 .end-confirm-dialog {
-    background: rgb(40, 43, 43);
+    background: var(--surface-glass);
     padding: 2rem;
-    border-radius: 10px;
+    border-radius: var(--radius-xl);
     text-align: center;
-    border: 2px solid rgb(136, 8, 8);
+    border: 1px solid rgba(136, 8, 8, 0.4);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: slideInUp 0.3s ease-out 0.1s both;
 }
 
 .end-confirm-dialog p {
     font-family: 'zombie';
     font-size: clamp(24px, 5vw, 36px);
-    color: rgb(238, 210, 2);
+    color: var(--color-gold);
     margin-bottom: 1.5rem;
 }
 
@@ -215,33 +308,49 @@ main {
     justify-content: center;
 }
 
-.confirm-yes, .confirm-no {
+.confirm-yes,
+.confirm-no {
     font-family: 'zombie';
     font-size: clamp(20px, 4vw, 28px);
     padding: 0.5em 1.5em;
     border: none;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition-duration: 0.4s;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                background var(--transition-base);
 }
 
 .confirm-yes {
-    background-color: rgb(136, 8, 8);
-    color: rgb(238, 210, 2);
+    background: var(--gradient-red);
+    color: var(--color-gold);
 }
 
 .confirm-yes:hover {
-    background-color: rgb(238, 210, 2);
-    color: rgb(136, 8, 8);
+    background: var(--gradient-gold);
+    color: var(--color-dark-red);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-gold);
 }
 
 .confirm-no {
-    background-color: rgb(73, 17, 17);
-    color: rgb(238, 210, 2);
+    background: var(--surface-glass-light);
+    color: var(--color-gold);
+    border: 1px solid rgba(238, 210, 2, 0.3);
 }
 
 .confirm-no:hover {
-    background-color: rgb(238, 210, 2);
-    color: rgb(73, 17, 17);
+    background: var(--gradient-gold);
+    color: var(--color-dark-gray);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-gold);
+}
+
+.confirm-yes:focus-visible,
+.confirm-no:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
 }
 
 .patient-zero-notification {
@@ -249,14 +358,16 @@ main {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, rgb(136, 8, 8), rgb(80, 5, 5));
-    color: rgb(238, 210, 2);
+    background: var(--gradient-red);
+    color: var(--color-gold);
     padding: 2rem;
-    border-radius: 15px;
+    border-radius: var(--radius-xl);
     text-align: center;
     z-index: 1000;
-    box-shadow: 0 0 30px rgba(136, 8, 8, 0.8);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-red);
     animation: pulseZombie 1s ease-in-out infinite;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .patient-zero-notification h2 {
@@ -284,10 +395,16 @@ main {
     .survivor1 img,
     .survivor2 img {
         width: clamp(40px, 18vw, 60px);
+        height: clamp(40px, 18vw, 60px);
     }
 
     .patient-zero-notification {
         padding: 1.5rem;
         width: 90%;
+    }
+
+    .infected > div,
+    .survivors > div {
+        padding: 0.35rem;
     }
 }

@@ -1,30 +1,15 @@
-@font-face {
-    font-family: 'zombie';
-    src: url(fonts/zombie.otf) format("opentype")
-}
-
-.bebas-neue-regular {
-    font-family: "Bebas Neue", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-* {
-    font-family: 'Bebas Neue';
-}
-
 .welcome {
     background-color: transparent;
     font-family: 'zombie';
     font-size: clamp(48px, 12vw, 125px);
     text-align: center;
-    color: rgb(238, 210, 2);
+    color: var(--color-gold);
     margin: 0;
     line-height: 1.1;
 }
 
 .introduction {
-    color: rgb(238, 210, 2);
+    color: var(--color-gold);
     font-size: clamp(20px, 4vw, 35px);
     background-color: transparent;
     text-align: center;
@@ -33,29 +18,32 @@
 .join-code-display {
     text-align: center;
     margin: 1rem 0;
-    padding: 1rem;
-    background: rgba(136, 8, 8, 0.2);
-    border: 2px solid rgb(136, 8, 8);
-    border-radius: 10px;
+    padding: 1.5rem;
+    background: var(--surface-glass);
+    border: 1px solid rgba(136, 8, 8, 0.4);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .join-code-label {
-    color: rgb(173, 162, 162);
+    color: var(--color-light-gray);
     font-size: clamp(16px, 3vw, 22px);
     margin: 0 0 0.5rem 0;
 }
 
 .join-code {
     font-family: 'zombie';
-    color: rgb(238, 210, 2);
+    color: var(--color-gold);
     font-size: clamp(40px, 10vw, 80px);
     margin: 0;
     letter-spacing: 0.2em;
-    text-shadow: 0 0 10px rgba(238, 210, 2, 0.5);
+    text-shadow: var(--shadow-glow-gold);
 }
 
 main {
-    background-color: rgb(40, 43, 43);
+    background-color: var(--color-dark-gray);
     padding: clamp(0.5rem, 2vw, 1rem);
     min-height: 0;
     flex: 1;
@@ -65,14 +53,14 @@ main {
 }
 
 .total_joined {
-    color: rgb(173, 162, 162);
+    color: var(--color-light-gray);
     font-size: clamp(18px, 3vw, 25px);
     margin-top: 0;
     text-align: center;
 }
 
 .Players-ready {
-    color: rgb(173, 162, 162);
+    color: var(--color-light-gray);
     font-size: clamp(48px, 12vw, 100px);
     margin: 0;
     text-align: center;
@@ -94,24 +82,43 @@ main {
     text-align: center;
     flex: 0 0 auto;
     min-width: 80px;
+    padding: 0.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface-glass);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base);
 }
 
 .current-player {
-    color: rgb(250, 250, 250);
+    color: var(--color-white);
+    border: 2px solid var(--color-gold);
+    box-shadow: var(--shadow-md), var(--shadow-glow-gold);
 }
 
 .other-player {
-    color: rgb(173, 162, 162);
+    color: var(--color-light-gray);
+    border: 1px solid rgba(173, 162, 162, 0.3);
+    box-shadow: var(--shadow-sm);
+}
+
+.other-player:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .current-player img,
 .other-player img {
     width: clamp(60px, 15vw, 100px);
-    height: auto;
+    height: clamp(60px, 15vw, 100px);
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 3px solid currentColor;
 }
 
 .info {
-    color: rgb(173, 162, 162);
+    color: var(--color-light-gray);
     text-align: center;
     font-size: clamp(28px, 6vw, 50px);
     background-color: transparent;
@@ -119,27 +126,46 @@ main {
 }
 
 .start {
-    background-color: rgb(40, 43, 43);
-    color: rgb(136, 8, 8);
+    background: var(--surface-glass);
+    color: var(--color-dark-red);
     font-size: clamp(24px, 5vw, 40px);
-    transition-duration: 0.4s;
     padding: 0.5em 1.5em;
-    border: 2px solid rgb(136, 8, 8);
+    border: 2px solid var(--color-dark-red);
+    border-radius: var(--radius-md);
     cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                background var(--transition-base),
+                color var(--transition-base);
 }
 
 .start:hover {
-    background-color: rgb(136, 8, 8);
-    color: rgb(40, 43, 43);
+    background: var(--gradient-red);
+    color: var(--color-gold);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-red);
+}
+
+.start:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
 }
 
 .start:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
+}
+
+.start:disabled:hover {
+    background: var(--surface-glass);
+    color: var(--color-dark-red);
+    box-shadow: var(--shadow-md);
 }
 
 .waiting-message {
-    color: rgb(173, 162, 162);
+    color: var(--color-light-gray);
     font-size: clamp(20px, 4vw, 30px);
     text-align: center;
     font-style: italic;
@@ -159,5 +185,11 @@ main {
     .current-player img,
     .other-player img {
         width: clamp(50px, 20vw, 80px);
+        height: clamp(50px, 20vw, 80px);
+    }
+
+    .current-player,
+    .other-player {
+        padding: 0.5rem;
     }
 }
