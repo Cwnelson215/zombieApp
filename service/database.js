@@ -39,6 +39,7 @@ export async function createGame(length) {
 }
 
 export async function addPlayer(joinCode, nickName, picNumber) {
+    joinCode = joinCode.toUpperCase();
     const result = await gameCollection.findOne({ joinCode: joinCode});
     if (!result) {
         console.log(`No game found with join code '${joinCode}`);
@@ -71,6 +72,7 @@ export async function addPlayer(joinCode, nickName, picNumber) {
 }
 
 export async function findGame(joinCode) {
+    joinCode = joinCode.toUpperCase();
     const result = await gameCollection.findOne({ joinCode: joinCode});
     if(result) {
         return result;
@@ -92,6 +94,7 @@ export async function findPlayer(authToken) {
 }
 
 export async function updatePlayerStatus(joinCode, authToken, newStatus) {
+    joinCode = joinCode.toUpperCase();
     const result = await gameCollection.updateOne(
         { joinCode: joinCode, "players.authToken": authToken },
         { $set: { "players.$.status": newStatus } }
@@ -125,6 +128,7 @@ function generateAuthToken() {
 }
 
 export async function savePushSubscription(joinCode, authToken, subscription) {
+    joinCode = joinCode.toUpperCase();
     console.log('[DB] Saving push subscription for:', joinCode, authToken);
     const result = await gameCollection.updateOne(
         { joinCode: joinCode, "players.authToken": authToken },
@@ -135,6 +139,7 @@ export async function savePushSubscription(joinCode, authToken, subscription) {
 }
 
 export async function removePushSubscription(joinCode, authToken) {
+    joinCode = joinCode.toUpperCase();
     const result = await gameCollection.updateOne(
         { joinCode: joinCode, "players.authToken": authToken },
         { $unset: { "players.$.pushSubscription": "" } }
@@ -143,6 +148,7 @@ export async function removePushSubscription(joinCode, authToken) {
 }
 
 export async function startGame(joinCode, authToken) {
+    joinCode = joinCode.toUpperCase();
     const game = await gameCollection.findOne({ joinCode: joinCode });
     if (!game) {
         return { error: 'Game not found' };
@@ -178,6 +184,7 @@ export async function startGame(joinCode, authToken) {
 }
 
 export async function transferOwner(joinCode, currentOwnerAuthToken) {
+    joinCode = joinCode.toUpperCase();
     const game = await gameCollection.findOne({ joinCode: joinCode });
     if (!game) {
         return { error: 'Game not found' };
@@ -206,6 +213,7 @@ export async function findGameByPlayerAuth(authToken) {
 }
 
 export async function getPushSubscriptionsForGame(joinCode, excludeAuthToken) {
+    joinCode = joinCode.toUpperCase();
     console.log('[DB] Getting push subscriptions for game:', joinCode, 'excluding:', excludeAuthToken);
     const game = await gameCollection.findOne({ joinCode: joinCode });
     if (!game) {
