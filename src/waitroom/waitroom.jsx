@@ -84,6 +84,10 @@ export function Waitroom() {
     return (
         <main>
             <p className="introduction">Waiting for players...</p>
+            <div className="join-code-display">
+                <p className="join-code-label">Share this code to invite players:</p>
+                <p className="join-code">{joinCode}</p>
+            </div>
             <p className="total_joined">Players Joined: {players.length}</p>
             <p className="Players-ready">Players Ready:</p>
             <div className="container">

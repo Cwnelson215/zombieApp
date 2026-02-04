@@ -214,6 +214,7 @@ export function Running() {
             {gameOutcome && (
                 <div className={`game-outcome-overlay ${gameOutcome}`}>
                     <h1>{gameOutcome === 'zombies' ? 'GAME OVER' : 'SURVIVORS WIN'}</h1>
+                    <button className="leave-game-btn" onClick={() => navigate('/')}>Leave Game</button>
                 </div>
             )}
 

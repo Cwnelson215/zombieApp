@@ -140,6 +140,7 @@ main {
     right: 0;
     bottom: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 9999;
@@ -152,6 +153,23 @@ main {
     text-align: center;
     margin: 0;
     text-shadow: 0 0 20px currentColor;
+}
+
+.leave-game-btn {
+    font-family: 'zombie';
+    font-size: clamp(24px, 5vw, 40px);
+    background-color: rgb(136, 8, 8);
+    color: rgb(238, 210, 2);
+    padding: 0.5em 1.5em;
+    border: none;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    margin-top: 2rem;
+}
+
+.leave-game-btn:hover {
+    background-color: rgb(238, 210, 2);
+    color: rgb(136, 8, 8);
 }
 
 .game-outcome-overlay.zombies h1 {

@@ -30,6 +30,30 @@
     text-align: center;
 }
 
+.join-code-display {
+    text-align: center;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(136, 8, 8, 0.2);
+    border: 2px solid rgb(136, 8, 8);
+    border-radius: 10px;
+}
+
+.join-code-label {
+    color: rgb(173, 162, 162);
+    font-size: clamp(16px, 3vw, 22px);
+    margin: 0 0 0.5rem 0;
+}
+
+.join-code {
+    font-family: 'zombie';
+    color: rgb(238, 210, 2);
+    font-size: clamp(40px, 10vw, 80px);
+    margin: 0;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 10px rgba(238, 210, 2, 0.5);
+}
+
 main {
     background-color: rgb(40, 43, 43);
     padding: clamp(0.5rem, 2vw, 1rem);
