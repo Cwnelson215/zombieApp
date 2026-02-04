@@ -226,3 +226,16 @@ export async function getPushSubscriptionsForGame(joinCode, excludeAuthToken) {
     return result;
 }
 
+export async function deleteEmptyGames() {
+    const result = await gameCollection.deleteMany({
+        players: { $size: 0 }
+    });
+    return { deletedCount: result.deletedCount };
+}
+
+export async function getCleanupStats() {
+    const emptyGames = await gameCollection.countDocuments({ players: { $size: 0 } });
+    const totalGames = await gameCollection.countDocuments({});
+    return { emptyGames, totalGames };
+}
+

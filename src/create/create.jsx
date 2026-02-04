@@ -64,7 +64,7 @@ export function Create() {
             {!checkboxY && (
                 <label>
                     <p htmlFor="timer_s">Select Number of Minutes:</p>
-                    <input type="number" id="timer" value={minutes} onChange={handleTimer} min="15" max="90" step="5"/>
+                    <input type="number" id="timer" value={minutes} onChange={handleTimer} min="5" max="90" step="5"/>
                 </label>
             )}
         </div>
