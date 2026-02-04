@@ -172,7 +172,8 @@ export async function startGame(joinCode, authToken) {
         firstInfected: {
             name: firstInfected.name,
             authToken: firstInfected.authToken
-        }
+        },
+        timer: game.timer
     };
 }
 

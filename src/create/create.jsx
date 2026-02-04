@@ -29,7 +29,8 @@ export function Create() {
 
     const submit = async () => {
         let res =  await fetch("/api/game/create", {
-            method: 'Post',
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 timer: minutes
             })

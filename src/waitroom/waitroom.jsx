@@ -41,9 +41,10 @@ export function Waitroom() {
             fetchPlayers();
         });
 
-        socket.on('game-started', ({ firstInfectedAuthToken, firstInfectedName }) => {
+        socket.on('game-started', ({ firstInfectedAuthToken, firstInfectedName, timer }) => {
             localStorage.setItem("firstInfectedAuthToken", firstInfectedAuthToken);
             localStorage.setItem("firstInfectedName", firstInfectedName);
+            localStorage.setItem("timer", timer);
             navigate(`/game/${joinCode}/running`);
         });
 

@@ -121,7 +121,8 @@ apiRouter.post('/game/start', async (req, res) => {
   }
   io.to(joinCode).emit('game-started', {
     firstInfectedAuthToken: result.firstInfected.authToken,
-    firstInfectedName: result.firstInfected.name
+    firstInfectedName: result.firstInfected.name,
+    timer: result.timer
   });
   res.json(result);
 });
