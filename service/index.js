@@ -264,6 +264,14 @@ io.on('connection', (socket) => {
     socket.to(joinCode).emit('player-list-updated');
   });
 
+  socket.on('end-game', async ({ joinCode, authToken }) => {
+    const game = await findGame(joinCode);
+    if (game && game.ownerAuthToken === authToken) {
+      io.to(joinCode).emit('game-ended');
+      console.log(`Game ${joinCode} ended by owner`);
+    }
+  });
+
   socket.on('disconnect', async () => {
     console.log('Client disconnected:', socket.id);
     if (socket.joinCode && socket.authToken) {

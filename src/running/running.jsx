@@ -18,9 +18,12 @@ export function Running() {
     const [minutes, setMinutes] = useState(initialMinutes);
     const [tens, setTens] = useState(0);
     const [ones, setOnes] = useState(0);
-    const [showMessage, setShowMessage] = useState(false);
     const [toastData, setToastData] = useState(null);
     const [showPatientZero, setShowPatientZero] = useState(false);
+    const [gameOutcome, setGameOutcome] = useState(null); // 'zombies' | 'survivors' | null
+    const [isOwner, setIsOwner] = useState(false);
+    const [showEndConfirm, setShowEndConfirm] = useState(false);
+    const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
     const fetchPlayers = useCallback(async () => {
         const response = await fetch('/api/game/getPlayers', {
@@ -31,6 +34,7 @@ export function Running() {
         if (response.ok) {
             const data = await response.json();
             setPlayers(data.players);
+            setIsOwner(data.ownerAuthToken === authToken);
             const me = data.players.find(p => p.authToken === authToken);
             if (me) setCurrentPlayer(me);
         }
@@ -77,10 +81,15 @@ export function Running() {
 
         socket.on('player-infected', handlePlayerInfected);
 
+        socket.on('game-ended', () => {
+            navigate(`/game/${joinCode}/join`);
+        });
+
         return () => {
             socket.off('player-infected', handlePlayerInfected);
+            socket.off('game-ended');
         };
-    }, [socket, joinCode, authToken]);
+    }, [socket, joinCode, authToken, navigate]);
 
     const handleInfection = () => {
         if (!socket || !currentPlayer) return;
@@ -93,6 +102,16 @@ export function Running() {
         });
 
         setCurrentPlayer(prev => ({ ...prev, status: newStatus }));
+    };
+
+    const handleEndGame = () => {
+        if (socket) {
+            socket.emit('end-game', { joinCode, authToken });
+        }
+    };
+
+    const handleLeaveGame = () => {
+        navigate(`/game/${joinCode}/join`);
     };
 
     useEffect(() => {
@@ -119,10 +138,18 @@ export function Running() {
     }, [minutes, tens, ones]);
 
     useEffect(() => {
-        if (minutes === 0 && tens === 0 && ones === 0 && initialMinutes !== 0) {
-            setShowMessage(true);
+        if (players.length === 0) return;
+
+        const allInfected = players.every(p => p.status);
+        const timerEnded = minutes === 0 && tens === 0 && ones === 0 && initialMinutes !== 0;
+        const hasSurvivors = players.some(p => !p.status);
+
+        if (allInfected) {
+            setGameOutcome('zombies');
+        } else if (timerEnded && hasSurvivors) {
+            setGameOutcome('survivors');
         }
-    }, [minutes, tens, ones, initialMinutes]);
+    }, [players, minutes, tens, ones, initialMinutes]);
 
     const infectedPlayers = players.filter(p => p.status);
     const survivorPlayers = players.filter(p => !p.status);
@@ -173,7 +200,7 @@ export function Running() {
             </div>
 
             <div className="announce">
-                {!showMessage && (
+                {!gameOutcome && (
                     <label>
                         <p className="announcement">Push If Infected</p>
                         <button className="button" onClick={handleInfection}>
@@ -183,13 +210,45 @@ export function Running() {
                 )}
             </div>
 
-            <div className="g_over">
-                {showMessage && (
-                    <p>GAME OVER</p>
-                )}
-            </div>
+            {/* Game outcome overlay */}
+            {gameOutcome && (
+                <div className={`game-outcome-overlay ${gameOutcome}`}>
+                    <h1>{gameOutcome === 'zombies' ? 'GAME OVER' : 'SURVIVORS WIN'}</h1>
+                </div>
+            )}
 
-            <button className="end" onClick={() => navigate('/')}>End Game</button>
+            {/* End game confirmation overlay (owner only) */}
+            {showEndConfirm && (
+                <div className="end-confirm-overlay">
+                    <div className="end-confirm-dialog">
+                        <p>Are you sure you want to end the game?</p>
+                        <div className="end-confirm-buttons">
+                            <button className="confirm-yes" onClick={() => { handleEndGame(); setShowEndConfirm(false); }}>Yes</button>
+                            <button className="confirm-no" onClick={() => setShowEndConfirm(false)}>No</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Leave game confirmation overlay (non-owner) */}
+            {showLeaveConfirm && (
+                <div className="end-confirm-overlay">
+                    <div className="end-confirm-dialog">
+                        <p>Are you sure you want to leave the game?</p>
+                        <div className="end-confirm-buttons">
+                            <button className="confirm-yes" onClick={() => { handleLeaveGame(); setShowLeaveConfirm(false); }}>Yes</button>
+                            <button className="confirm-no" onClick={() => setShowLeaveConfirm(false)}>No</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* End/Leave game buttons */}
+            {isOwner ? (
+                <button className="end" onClick={() => setShowEndConfirm(true)}>End Game</button>
+            ) : (
+                <button className="end" onClick={() => setShowLeaveConfirm(true)}>Leave Game</button>
+            )}
         </main>
     );
 }

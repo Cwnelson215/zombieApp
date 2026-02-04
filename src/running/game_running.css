@@ -132,10 +132,98 @@ main {
     color: rgb(136, 8, 8);
 }
 
-.g_over {
-    font-size: clamp(48px, 12vw, 100px);
+/* Game outcome overlay (zombies win / survivors win) */
+.game-outcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.game-outcome-overlay h1 {
+    font-family: 'zombie';
+    font-size: clamp(60px, 15vw, 150px);
     text-align: center;
     margin: 0;
+    text-shadow: 0 0 20px currentColor;
+}
+
+.game-outcome-overlay.zombies h1 {
+    color: rgb(136, 8, 8);
+}
+
+.game-outcome-overlay.survivors h1 {
+    color: rgb(34, 139, 34);
+}
+
+/* End game confirmation overlay */
+.end-confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.end-confirm-dialog {
+    background: rgb(40, 43, 43);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid rgb(136, 8, 8);
+}
+
+.end-confirm-dialog p {
+    font-family: 'zombie';
+    font-size: clamp(24px, 5vw, 36px);
+    color: rgb(238, 210, 2);
+    margin-bottom: 1.5rem;
+}
+
+.end-confirm-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.confirm-yes, .confirm-no {
+    font-family: 'zombie';
+    font-size: clamp(20px, 4vw, 28px);
+    padding: 0.5em 1.5em;
+    border: none;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.confirm-yes {
+    background-color: rgb(136, 8, 8);
+    color: rgb(238, 210, 2);
+}
+
+.confirm-yes:hover {
+    background-color: rgb(238, 210, 2);
+    color: rgb(136, 8, 8);
+}
+
+.confirm-no {
+    background-color: rgb(73, 17, 17);
+    color: rgb(238, 210, 2);
+}
+
+.confirm-no:hover {
+    background-color: rgb(238, 210, 2);
+    color: rgb(73, 17, 17);
 }
 
 .patient-zero-notification {
