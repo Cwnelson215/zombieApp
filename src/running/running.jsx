@@ -8,16 +8,16 @@ import { requestNotificationPermission, subscribeToPush, isPushSupported } from 
 
 export function Running() {
     const { joinCode } = useParams();
-    const initialMinutes = parseInt(localStorage.getItem("timer")) || 0;
     const authToken = localStorage.getItem("authToken");
     const navigate = useNavigate();
     const socket = useSocket();
 
     const [players, setPlayers] = useState([]);
     const [currentPlayer, setCurrentPlayer] = useState(null);
-    const [minutes, setMinutes] = useState(initialMinutes);
-    const [tens, setTens] = useState(0);
-    const [ones, setOnes] = useState(0);
+    const [endTime, setEndTime] = useState(() => {
+        return parseInt(localStorage.getItem("endTime")) || 0;
+    });
+    const [remainingSeconds, setRemainingSeconds] = useState(0);
     const [toastData, setToastData] = useState(null);
     const [showPatientZero, setShowPatientZero] = useState(false);
     const [gameOutcome, setGameOutcome] = useState(null); // 'zombies' | 'survivors' | null
@@ -37,6 +37,10 @@ export function Running() {
             setIsOwner(data.ownerAuthToken === authToken);
             const me = data.players.find(p => p.authToken === authToken);
             if (me) setCurrentPlayer(me);
+            if (data.endTime) {
+                setEndTime(data.endTime);
+                localStorage.setItem("endTime", data.endTime);
+            }
         }
     }, [joinCode, authToken]);
 
@@ -115,27 +119,18 @@ export function Running() {
     };
 
     useEffect(() => {
-        let timerInterval;
+        if (!endTime) return;
 
-        if (minutes > 0 || tens > 0 || ones > 0) {
-            timerInterval = setInterval(() => {
-                if (ones > 0) {
-                    setOnes(ones - 1);
-                } else if (tens > 0) {
-                    setTens(tens - 1);
-                    setOnes(9);
-                } else if (minutes > 0) {
-                    setMinutes(minutes - 1);
-                    setTens(5);
-                    setOnes(9);
-                }
-            }, 1000);
+        const updateRemainingTime = () => {
+            const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+            setRemainingSeconds(remaining);
+        };
 
-            return () => clearInterval(timerInterval);
-        }
+        updateRemainingTime();
+        const timerInterval = setInterval(updateRemainingTime, 1000);
 
-        return () => {};
-    }, [minutes, tens, ones]);
+        return () => clearInterval(timerInterval);
+    }, [endTime]);
 
     useEffect(() => {
         if (players.length === 0) return;

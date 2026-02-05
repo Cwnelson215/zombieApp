@@ -166,12 +166,14 @@ export async function startGame(joinCode, authToken) {
     }
     const randomIndex = Math.floor(Math.random() * game.players.length);
     const firstInfected = game.players[randomIndex];
+    const endTime = Date.now() + game.timer * 60 * 1000;
     await gameCollection.updateOne(
         { joinCode: joinCode, "players.authToken": firstInfected.authToken },
         {
             $set: {
                 "players.$.status": true,
-                status: 'running'
+                status: 'running',
+                endTime: endTime
             }
         }
     );
@@ -181,7 +183,7 @@ export async function startGame(joinCode, authToken) {
             name: firstInfected.name,
             authToken: firstInfected.authToken
         },
-        timer: game.timer
+        endTime: endTime
     };
 }
 
