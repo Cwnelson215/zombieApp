@@ -136,7 +136,7 @@ export function Running() {
         if (players.length === 0) return;
 
         const allInfected = players.every(p => p.status);
-        const timerEnded = minutes === 0 && tens === 0 && ones === 0 && initialMinutes !== 0;
+        const timerEnded = remainingSeconds === 0 && endTime > 0;
         const hasSurvivors = players.some(p => !p.status);
 
         if (allInfected) {
@@ -144,7 +144,7 @@ export function Running() {
         } else if (timerEnded && hasSurvivors) {
             setGameOutcome('survivors');
         }
-    }, [players, minutes, tens, ones, initialMinutes]);
+    }, [players, remainingSeconds, endTime]);
 
     const infectedPlayers = players.filter(p => p.status);
     const survivorPlayers = players.filter(p => !p.status);
@@ -167,8 +167,8 @@ export function Running() {
             )}
 
             <div className="timer">
-                {minutes >= 0 && initialMinutes !== 0 && (
-                    <p>Time Remaining: {minutes}:{tens}{ones}</p>
+                {endTime > 0 && (
+                    <p>Time Remaining: {Math.floor(remainingSeconds / 60)}:{String(remainingSeconds % 60).padStart(2, '0')}</p>
                 )}
             </div>
 
