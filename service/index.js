@@ -124,7 +124,7 @@ apiRouter.post('/game/start', async (req, res) => {
   if (result.error) {
     return res.status(400).json({ error: result.error });
   }
-  io.to(joinCode).emit('game-started', {
+  io.to(joinCode.toUpperCase()).emit('game-started', {
     firstInfectedAuthToken: result.firstInfected.authToken,
     firstInfectedName: result.firstInfected.name,
     timer: result.timer
@@ -239,21 +239,23 @@ io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
   socket.on('join-game', (joinCode, authToken) => {
-    socket.join(joinCode);
-    socket.joinCode = joinCode;
+    const room = joinCode.toUpperCase();
+    socket.join(room);
+    socket.joinCode = room;
     socket.authToken = authToken;
-    console.log(`Socket ${socket.id} joined game room: ${joinCode} with authToken: ${authToken}`);
+    console.log(`Socket ${socket.id} joined game room: ${room} with authToken: ${authToken}`);
   });
 
   socket.on('infection-update', async ({ joinCode, authToken, newStatus }) => {
+    const room = joinCode.toUpperCase();
     const player = await updatePlayerStatus(joinCode, authToken, newStatus);
     if (player) {
-      io.to(joinCode).emit('player-infected', {
+      io.to(room).emit('player-infected', {
         playerName: player.name,
         newStatus: newStatus,
         authToken: authToken
       });
-      console.log(`Player ${player.name} infection status changed to ${newStatus} in game ${joinCode}`);
+      console.log(`Player ${player.name} infection status changed to ${newStatus} in game ${room}`);
 
       // Send push notifications to other players
       const statusText = newStatus ? 'infected' : 'cured';
@@ -267,14 +269,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('player-joined', (joinCode) => {
-    socket.to(joinCode).emit('player-list-updated');
+    socket.to(joinCode.toUpperCase()).emit('player-list-updated');
   });
 
   socket.on('end-game', async ({ joinCode, authToken }) => {
+    const room = joinCode.toUpperCase();
     const game = await findGame(joinCode);
     if (game && game.ownerAuthToken === authToken) {
-      io.to(joinCode).emit('game-ended');
-      console.log(`Game ${joinCode} ended by owner`);
+      io.to(room).emit('game-ended');
+      console.log(`Game ${room} ended by owner`);
     }
   });
 
