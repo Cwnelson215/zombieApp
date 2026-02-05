@@ -18,7 +18,7 @@ export default function App() {
         <SocketProvider>
         <div className='app bg-dark text-light'>
             <header>
-                <p className="title">INFECTED.FYI</p>
+                <p className="title">INFECTION</p>
             </header>
             <Routes>
                 <Route path='/' element={<Home />} />

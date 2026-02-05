@@ -15,6 +15,7 @@ RUN npm ci
 COPY index.html index.jsx ./
 COPY src/ ./src/
 COPY vite.config.js ./
+COPY public/ ./public/
 
 # Build frontend - outputs to dist/
 RUN npm run build

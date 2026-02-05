@@ -113,7 +113,6 @@ export function Join() {
     return (
 
         <main>
-            <p className="heading">Game Found!</p>
             <div>
                 <p className="joinCode">Join Code: {joinCode}</p>
             </div>
