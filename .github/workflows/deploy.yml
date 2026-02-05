@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: portfolio/infect-app
+  ECS_SERVICE: infect-app
+  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER_NAME }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -13,50 +19,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Install dependencies
-        run: npm install
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build frontend
-        run: npm run build
-
-      - name: Prepare deployment package
-        run: |
-          mkdir -p build/public
-          cp -rf dist/* build/public/
-          cp service/*.js build/
-          cp service/*.json build/
-
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to server
+      - name: Build, tag, and push Docker image
         env:
-          HOST: ${{ secrets.DEPLOY_HOST }}
-          SERVICE: ${{ secrets.SERVICE_NAME }}
-          DB_CONFIG: ${{ secrets.DB_CONFIG }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Clear previous deployment
-          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "rm -rf services/${SERVICE} && mkdir -p services/${SERVICE}"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-          # Copy new build
-          scp -r -i ~/.ssh/deploy_key build/* ubuntu@$HOST:services/$SERVICE
-
-          # Create database config from secret
-          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "echo '${DB_CONFIG}' > services/${SERVICE}/dbConfig.json"
-
-          # Install dependencies and restart service
-          ssh -i ~/.ssh/deploy_key ubuntu@$HOST "source ~/.nvm/nvm.sh && cd services/${SERVICE} && npm install --production && pm2 restart ${SERVICE}"
-
-      - name: Cleanup
-        if: always()
-        run: rm -f ~/.ssh/deploy_key
+      - name: Update ECS service
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
+            --force-new-deployment

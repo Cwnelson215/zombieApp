@@ -52,7 +52,7 @@ CSS deliverables:
 - [x] Added some notes to my notes.md file
 - [x] Pushed finalized version to my github repo.
 - [x] Successfully deployed my application to my product environment
-- [x] Application is avilable at startup.infect.fyi
+- [x] Application is avilable at infect.cwnel.com
 - [x] Uploded url to canvas and turned in assignemnt
 
 ReactP1 deliverables:
@@ -63,8 +63,8 @@ ReactP1 deliverables:
 - [x] Made several commits and pushes to github while working on the porject
 - [x] updated notes.md to help remember things i learned
 - [x] Pushed final version onto Github
-- [x] Deloyed to production environment startup.infect.fyi
-- [x] Startup.infect.fyi is publically available
+- [x] Deloyed to production environment infect.cwnel.com
+- [x] infect.cwnel.com is publically available
 - [x] Uploaded and submitted url to Canvas
 
 ReactP2 deliverables:
@@ -74,8 +74,8 @@ ReactP2 deliverables:
 - [x] My name and github link are displayed in the footer
 - [x] Updated notes.md as needed
 - [x] Pushed to Github several times over several days
-- [x] Deployed to my production environmnet at startup.infect.fyi
-- [x] startup.infect.fyi is publicly available
+- [x] Deployed to my production environmnet at infect.cwnel.com
+- [x] infect.cwnel.com is publicly available
 - [x] Uploaded startup URL to canvas assignment
 
 StartupService deliverables:

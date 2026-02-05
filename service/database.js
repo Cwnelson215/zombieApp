@@ -1,11 +1,13 @@
-import crypto from "crypto";
-import { join } from "path";
 import { MongoClient } from "mongodb";
-import {readFileSync} from 'fs';
+import { readFileSync } from "fs";
 
-
-const config = JSON.parse(readFileSync('./dbConfig.json', 'utf-8'))
-const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+let url;
+if (process.env.MONGODB_URI) {
+  url = process.env.MONGODB_URI;
+} else {
+  const config = JSON.parse(readFileSync('./dbConfig.json', 'utf-8'));
+  url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+}
 const client = new MongoClient(url);
 const db = client.db('infect');
 const gameCollection = db.collection('games');

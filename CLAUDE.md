@@ -25,9 +25,7 @@ npm run cleanup  # Run database cleanup script
 The backend runs on port 4000 by default (or pass custom port as CLI argument). Vite proxies `/api` and `/socket.io` requests to `localhost:4000`.
 
 ### Deployment
-```bash
-./deployService.sh  # Deploy to production (startup.infect.fyi)
-```
+Deployment is automated via GitHub Actions. Pushing to `main` triggers a Docker build, ECR push, and ECS service update. Infrastructure is managed with Pulumi (see `infra/`).
 
 ## Architecture
 

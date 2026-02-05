@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.github
+.vscode
+design
+notes.md
+CLAUDE.md
+README.md
+deployService.sh
+service/node_modules
+service/dbConfig.json
+.env

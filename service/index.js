@@ -25,7 +25,9 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:4173"],
+    origin: process.env.NODE_ENV === 'production'
+      ? ["https://infect.cwnel.com"]
+      : ["http://localhost:5173", "http://localhost:4173"],
     methods: ["GET", "POST"]
   }
 });
@@ -35,10 +37,9 @@ const fontendPath = 'public';
 
 // The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
-let scores = [];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
-const port = process.argv.length > 2 ? process.argv[2] : 4000;
+const port = process.env.PORT || (process.argv.length > 2 ? process.argv[2] : 4000);
 
 // JSON body parsing using built-in middleware
 app.use(express.json());
@@ -48,6 +49,11 @@ app.use(cookieParser());
 
 // Serve up the front-end static content hosting
 app.use(express.static(fontendPath));
+
+// Health check endpoint (required for ECS)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
 
 // Router for service endpoints
 var apiRouter = express.Router();
@@ -65,7 +71,6 @@ const verifyAuth = async (req, res, next) => {
 
 apiRouter.post('/game/create', async (req, res) => {
     const game = await createGame(req.body.timer);
-    console
     res.json({
         joinCode: game.joinCode,
     })

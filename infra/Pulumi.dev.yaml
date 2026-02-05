@@ -1,0 +1,28 @@
+config:
+  aws:region: us-east-1
+  infect-app:appName: infect-app
+  infect-app:subdomain: infect
+  infect-app:platformStack: Cwnelson215-org/portfolio-platform/dev
+  infect-app:containerPort: "4000"
+  infect-app:cpu: "256"
+  infect-app:memory: "512"
+  infect-app:desiredCount: "1"
+  infect-app:useFargateSpot: "true"
+  # Scheduled scaling - scale down at night to save costs
+  infect-app:enableScheduledScaling: "true"
+  infect-app:scaleUpHour: "6"
+  infect-app:scaleDownHour: "22"
+  infect-app:scheduleTimezone: America/Denver
+  # Secrets - set these with: pulumi config set --secret <key> <value>
+  # infect-app:mongodbUri: <your-mongodb-connection-string>
+  # infect-app:vapidPublicKey: <your-vapid-public-key>
+  # infect-app:vapidPrivateKey: <your-vapid-private-key>
+  # infect-app:vapidEmail: <your-email>
+
+  infect-app:mongodbUri:
+    secure: AAABABmrnt9nm3dWdBj/pHzkIth9uYBvahpo5l7CwqtieSjvaAt8O8yDO7rvBxKp39dJszzocZFXx99wUKfuBMiQ7ueGGhhFxNl8H9+I3zCBjZaOO2yD7MexDRppflm0yKXnNQVPE3LatWc=
+  infect-app:vapidPublicKey:
+    secure: AAABALgyebm4nFBdKgNVOe87NVCHDtqiQ1rdnqnkUF2iuwGUCINQVOa/82V97tbR28s8hr76TrDYEpZA6pojSooI+IsKHiE80tK4Zkhi86o071H+U9/UiOuuT1BBI5cuzjPFVPaNULsnYRibDvp+HcwCZRJYysw=
+  infect-app:vapidPrivateKey:
+    secure: AAABAM0cFb24Lk0+GOSVxIGKj5D9QXOUIOt6tCNdXmQgzvbvO9gUlIe6ZevBvlTPAcVofhMseUs0B4EeFrRhkur+r2HqB+tWXaeu
+  infect-app:vapidEmail: mailto:admin@cwnel.com
