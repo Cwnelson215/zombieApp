@@ -49,7 +49,7 @@ export function Running() {
         const setupNotifications = async () => {
             const permissionGranted = await requestNotificationPermission();
             if (permissionGranted && isPushSupported()) {
-                // Subscribe to push notifications for background delivery (Android/Desktop)
+                // Subscribe to push notifications for background delivery
                 await subscribeToPush(joinCode, authToken);
             }
         };

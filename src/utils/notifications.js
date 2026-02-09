@@ -30,15 +30,8 @@ export function sendBrowserNotification(title, body) {
   }
 }
 
-// Check if the browser supports Web Push API (not iOS)
 export function isPushSupported() {
-  // iOS doesn't support Web Push API - check for iOS
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-  return 'serviceWorker' in navigator &&
-    'PushManager' in window &&
-    !isIOS;
+  return 'serviceWorker' in navigator && 'PushManager' in window;
 }
 
 // Subscribe to push notifications
