@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 env:
   AWS_REGION: us-east-1
@@ -12,7 +15,20 @@ env:
   ECS_CLUSTER: ${{ secrets.ECS_CLUSTER_NAME }}
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install frontend dependencies and build
+        run: npm ci && npm run build
+
+      - name: Install backend dependencies
+        run: cd service && npm ci
+
   deploy:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
