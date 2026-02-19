@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import webpush from 'web-push';
-import {createGame, addPlayer, findGame, findPlayer, updatePlayerStatus, savePushSubscription, removePushSubscription, getPushSubscriptionsForGame, startGame, transferOwner, findGameByPlayerAuth} from "./database.js"
+import {createGame, addPlayer, findGame, findPlayer, updatePlayerStatus, savePushSubscription, removePushSubscription, getPushSubscriptionsForGame, startGame, transferOwner, findGameByPlayerAuth, removePlayer, deleteGame} from "./database.js"
 
 // Configure web-push with VAPID keys
 if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
@@ -280,6 +280,20 @@ io.on('connection', (socket) => {
     if (game && game.ownerAuthToken === authToken) {
       io.to(room).emit('game-ended');
       console.log(`Game ${room} ended by owner`);
+      await deleteGame(joinCode);
+      console.log(`Game ${room} deleted from database`);
+    }
+  });
+
+  socket.on('leave-game', async ({ joinCode, authToken }) => {
+    const room = joinCode.toUpperCase();
+    socket.leave(room);
+    const updatedGame = await removePlayer(joinCode, authToken);
+    if (updatedGame && updatedGame.players.length === 0) {
+      await deleteGame(joinCode);
+      console.log(`Game ${room} deleted (last player left)`);
+    } else {
+      console.log(`Player removed from game ${room}`);
     }
   });
 
@@ -296,6 +310,11 @@ io.on('connection', (socket) => {
             newOwnerName: result.newOwnerName
           });
         }
+      }
+      const updatedGame = await removePlayer(socket.joinCode, socket.authToken);
+      if (updatedGame && updatedGame.players.length === 0) {
+        await deleteGame(socket.joinCode);
+        console.log(`Game ${socket.joinCode} deleted (last player disconnected)`);
       }
     }
   });

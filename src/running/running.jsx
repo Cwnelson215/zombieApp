@@ -86,7 +86,7 @@ export function Running() {
         socket.on('player-infected', handlePlayerInfected);
 
         socket.on('game-ended', () => {
-            navigate(`/game/${joinCode}/join`);
+            navigate('/');
         });
 
         return () => {
@@ -115,7 +115,10 @@ export function Running() {
     };
 
     const handleLeaveGame = () => {
-        navigate(`/game/${joinCode}/join`);
+        if (socket) {
+            socket.emit('leave-game', { joinCode, authToken });
+        }
+        navigate('/');
     };
 
     useEffect(() => {
@@ -209,7 +212,7 @@ export function Running() {
             {gameOutcome && (
                 <div className={`game-outcome-overlay ${gameOutcome}`}>
                     <h1>{gameOutcome === 'zombies' ? 'GAME OVER' : 'SURVIVORS WIN'}</h1>
-                    <button className="leave-game-btn" onClick={() => navigate('/')}>Leave Game</button>
+                    <button className="leave-game-btn" onClick={handleLeaveGame}>Leave Game</button>
                 </div>
             )}
 

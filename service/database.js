@@ -237,6 +237,22 @@ export async function getPushSubscriptionsForGame(joinCode, excludeAuthToken) {
     return result;
 }
 
+export async function removePlayer(joinCode, authToken) {
+    joinCode = joinCode.toUpperCase();
+    const result = await gameCollection.findOneAndUpdate(
+        { joinCode: joinCode },
+        { $pull: { players: { authToken: authToken } } },
+        { returnDocument: 'after' }
+    );
+    return result;
+}
+
+export async function deleteGame(joinCode) {
+    joinCode = joinCode.toUpperCase();
+    const result = await gameCollection.deleteOne({ joinCode: joinCode });
+    return result.deletedCount > 0;
+}
+
 export async function deleteEmptyGames() {
     const result = await gameCollection.deleteMany({
         players: { $size: 0 }
