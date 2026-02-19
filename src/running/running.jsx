@@ -116,9 +116,12 @@ export function Running() {
 
     const handleLeaveGame = () => {
         if (socket) {
-            socket.emit('leave-game', { joinCode, authToken });
+            socket.emit('leave-game', { joinCode, authToken }, () => {
+                navigate('/');
+            });
+        } else {
+            navigate('/');
         }
-        navigate('/');
     };
 
     useEffect(() => {

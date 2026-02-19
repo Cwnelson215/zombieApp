@@ -285,7 +285,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('leave-game', async ({ joinCode, authToken }) => {
+  socket.on('leave-game', async ({ joinCode, authToken }, callback) => {
     const room = joinCode.toUpperCase();
     socket.leave(room);
     const updatedGame = await removePlayer(joinCode, authToken);
@@ -295,6 +295,7 @@ io.on('connection', (socket) => {
     } else {
       console.log(`Player removed from game ${room}`);
     }
+    if (typeof callback === 'function') callback();
   });
 
   socket.on('disconnect', async () => {
