@@ -41,6 +41,9 @@ export function Waitroom() {
     useEffect(() => {
         requestNotificationPermission();
         fetchPlayers();
+
+        const pollInterval = setInterval(fetchPlayers, 3000);
+        return () => clearInterval(pollInterval);
     }, [fetchPlayers]);
 
     useEffect(() => {
@@ -81,7 +84,13 @@ export function Waitroom() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ joinCode, authToken })
             });
-            if (!res.ok) {
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem("firstInfectedAuthToken", data.firstInfected.authToken);
+                localStorage.setItem("firstInfectedName", data.firstInfected.name);
+                localStorage.setItem("endTime", data.endTime);
+                navigate(`/game/${joinCode}/running`);
+            } else {
                 const data = await res.json();
                 alert(data.error || 'Failed to start game');
                 setStarting(false);
