@@ -126,7 +126,8 @@ apiRouter.post('/game/getPlayers', async (req, res) => {
       players: game.players,
       ownerAuthToken: game.ownerAuthToken,
       status: game.status,
-      endTime: game.endTime
+      endTime: game.endTime,
+      serverTime: Date.now()
     });
   }
 });
@@ -143,7 +144,8 @@ apiRouter.post('/game/start', async (req, res) => {
   io.to(joinCode.toUpperCase()).emit('game-started', {
     firstInfectedAuthToken: result.firstInfected.authToken,
     firstInfectedName: result.firstInfected.name,
-    endTime: result.endTime
+    endTime: result.endTime,
+    serverTime: Date.now()
   });
   res.json(result);
 });

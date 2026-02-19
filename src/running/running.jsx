@@ -17,6 +17,9 @@ export function Running() {
     const [endTime, setEndTime] = useState(() => {
         return parseInt(localStorage.getItem("endTime")) || 0;
     });
+    const [clockOffset, setClockOffset] = useState(() => {
+        return parseInt(localStorage.getItem("clockOffset")) || 0;
+    });
     const [remainingSeconds, setRemainingSeconds] = useState(0);
     const [toastData, setToastData] = useState(null);
     const [showPatientZero, setShowPatientZero] = useState(false);
@@ -40,6 +43,11 @@ export function Running() {
             if (data.endTime) {
                 setEndTime(data.endTime);
                 localStorage.setItem("endTime", data.endTime);
+            }
+            if (data.serverTime) {
+                const offset = data.serverTime - Date.now();
+                setClockOffset(offset);
+                localStorage.setItem("clockOffset", offset);
             }
         }
     }, [joinCode, authToken]);
@@ -96,6 +104,7 @@ export function Running() {
             localStorage.removeItem('joinCode');
             localStorage.removeItem('isOwner');
             localStorage.removeItem('endTime');
+            localStorage.removeItem('clockOffset');
             localStorage.removeItem('firstInfectedAuthToken');
             localStorage.removeItem('firstInfectedName');
             navigate('/');
@@ -132,6 +141,7 @@ export function Running() {
         localStorage.removeItem('joinCode');
         localStorage.removeItem('isOwner');
         localStorage.removeItem('endTime');
+        localStorage.removeItem('clockOffset');
         localStorage.removeItem('firstInfectedAuthToken');
         localStorage.removeItem('firstInfectedName');
         if (socket) {
@@ -147,7 +157,7 @@ export function Running() {
         if (!endTime) return;
 
         const updateRemainingTime = () => {
-            const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+            const remaining = Math.max(0, Math.floor((endTime - (Date.now() + clockOffset)) / 1000));
             setRemainingSeconds(remaining);
         };
 
@@ -155,7 +165,7 @@ export function Running() {
         const timerInterval = setInterval(updateRemainingTime, 1000);
 
         return () => clearInterval(timerInterval);
-    }, [endTime]);
+    }, [endTime, clockOffset]);
 
     useEffect(() => {
         if (players.length === 0) return;
