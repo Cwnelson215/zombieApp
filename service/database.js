@@ -25,22 +25,24 @@ const gameCollection = db.collection('games');
 
 export async function createGame(length) {
     const joinCode = generateJoinCode();
+    const ownerAuthToken = generateAuthToken();
     await gameCollection.insertOne(
         {
             joinCode: joinCode,
             players: [],
             timer: length,
             endTime: 0,
-            ownerAuthToken: null,
+            ownerAuthToken: ownerAuthToken,
             status: 'waiting'
         }
     );
     return {
-        joinCode
+        joinCode,
+        ownerAuthToken
     }
 }
 
-export async function addPlayer(joinCode, nickName, picNumber) {
+export async function addPlayer(joinCode, nickName, picNumber, ownerAuthToken) {
     joinCode = joinCode.toUpperCase();
     const result = await gameCollection.findOne({ joinCode: joinCode});
     if (!result) {
@@ -51,21 +53,17 @@ export async function addPlayer(joinCode, nickName, picNumber) {
         console.log(`Game '${joinCode}' has already started`);
         return { error: 'Game has already started' };
     }
-    const authToken = generateAuthToken();
-    const isOwner = result.ownerAuthToken === null;
+    const isOwner = !!(ownerAuthToken && ownerAuthToken === result.ownerAuthToken);
+    const authToken = isOwner ? ownerAuthToken : generateAuthToken();
     const newPlayer = {
         name: nickName,
         profilePic: picNumber,
         status: false,
         authToken: authToken,
     }
-    const updateFields = { $push: { players: newPlayer } };
-    if (isOwner) {
-        updateFields.$set = { ownerAuthToken: authToken };
-    }
     await gameCollection.updateOne(
         { joinCode: joinCode },
-        updateFields
+        { $push: { players: newPlayer } }
     );
     return {
         authToken,

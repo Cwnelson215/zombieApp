@@ -62,6 +62,8 @@ export function Join() {
         }
 
         try {
+            const ownerAuthToken = localStorage.getItem("ownerAuthToken");
+            localStorage.removeItem("ownerAuthToken");
             let response = await fetch('/api/player/add', {
                 method: 'POST',
                 headers: {
@@ -71,6 +73,7 @@ export function Join() {
                     joinCode: joinCode,
                     nickname: nickname,
                     profilePicture: selectedPicture,
+                    ...(ownerAuthToken && { ownerAuthToken }),
                 }),
             });
     

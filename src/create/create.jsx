@@ -36,6 +36,7 @@ export function Create() {
             })
         });
         res = await res.json()
+        localStorage.setItem("ownerAuthToken", res.ownerAuthToken);
         navigate(`/game/${res.joinCode}/join`)
     };
 

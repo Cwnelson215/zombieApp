@@ -73,6 +73,7 @@ apiRouter.post('/game/create', async (req, res) => {
     const game = await createGame(req.body.timer);
     res.json({
         joinCode: game.joinCode,
+        ownerAuthToken: game.ownerAuthToken,
     })
 });
 
@@ -82,7 +83,7 @@ apiRouter.post('/player/add', async (req, res) => {
         res.status(404).send({ msg: 'Game not found' });
         return;
     }
-    const player = await addPlayer(req.body.joinCode, req.body.nickname, req.body.profilePicture);
+    const player = await addPlayer(req.body.joinCode, req.body.nickname, req.body.profilePicture, req.body.ownerAuthToken);
     if (player.error) {
         res.status(400).send({ msg: player.error });
         return;
