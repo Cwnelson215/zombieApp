@@ -71,6 +71,12 @@ export function Running() {
 
         socket.emit('join-game', joinCode, authToken);
 
+        const handleReconnect = () => {
+            socket.emit('join-game', joinCode, authToken);
+        };
+
+        socket.on('connect', handleReconnect);
+
         const handlePlayerInfected = ({ playerName, newStatus, authToken: changedAuthToken }) => {
             setPlayers(prev => prev.map(p =>
                 p.authToken === changedAuthToken ? { ...p, status: newStatus } : p
@@ -86,10 +92,17 @@ export function Running() {
         socket.on('player-infected', handlePlayerInfected);
 
         socket.on('game-ended', () => {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('joinCode');
+            localStorage.removeItem('isOwner');
+            localStorage.removeItem('endTime');
+            localStorage.removeItem('firstInfectedAuthToken');
+            localStorage.removeItem('firstInfectedName');
             navigate('/');
         });
 
         return () => {
+            socket.off('connect', handleReconnect);
             socket.off('player-infected', handlePlayerInfected);
             socket.off('game-ended');
         };
@@ -115,6 +128,12 @@ export function Running() {
     };
 
     const handleLeaveGame = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('joinCode');
+        localStorage.removeItem('isOwner');
+        localStorage.removeItem('endTime');
+        localStorage.removeItem('firstInfectedAuthToken');
+        localStorage.removeItem('firstInfectedName');
         if (socket) {
             socket.emit('leave-game', { joinCode, authToken }, () => {
                 navigate('/');

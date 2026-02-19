@@ -37,6 +37,7 @@ const fontendPath = 'public';
 
 // The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
+const disconnectTimeouts = new Map(); // "joinCode:authToken" -> timeoutId
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.env.PORT || (process.argv.length > 2 ? process.argv[2] : 4000);
@@ -101,6 +102,19 @@ apiRouter.post('/game/check' , async (req, res) => {
   res.status(200).json({
     gameFound: !!game,
   });
+});
+
+apiRouter.post('/player/session', async (req, res) => {
+  const { authToken } = req.body;
+  if (!authToken) {
+    return res.status(400).json({ active: false });
+  }
+  const game = await findGameByPlayerAuth(authToken);
+  if (game) {
+    res.json({ active: true, joinCode: game.joinCode, status: game.status });
+  } else {
+    res.json({ active: false });
+  }
 });
 
 apiRouter.post('/game/getPlayers', async (req, res) => {
@@ -245,6 +259,15 @@ io.on('connection', (socket) => {
     socket.join(room);
     socket.joinCode = room;
     socket.authToken = authToken;
+
+    // Cancel any pending disconnect timeout for this player
+    const timeoutKey = `${room}:${authToken}`;
+    if (disconnectTimeouts.has(timeoutKey)) {
+      clearTimeout(disconnectTimeouts.get(timeoutKey));
+      disconnectTimeouts.delete(timeoutKey);
+      console.log(`Reconnect: cancelled disconnect timeout for ${authToken} in ${room}`);
+    }
+
     console.log(`Socket ${socket.id} joined game room: ${room} with authToken: ${authToken}`);
   });
 
@@ -278,6 +301,13 @@ io.on('connection', (socket) => {
     const room = joinCode.toUpperCase();
     const game = await findGame(joinCode);
     if (game && game.ownerAuthToken === authToken) {
+      // Clear all pending disconnect timeouts for this game
+      for (const [key, timeoutId] of disconnectTimeouts) {
+        if (key.startsWith(`${room}:`)) {
+          clearTimeout(timeoutId);
+          disconnectTimeouts.delete(key);
+        }
+      }
       io.to(room).emit('game-ended');
       console.log(`Game ${room} ended by owner`);
       await deleteGame(joinCode);
@@ -287,6 +317,12 @@ io.on('connection', (socket) => {
 
   socket.on('leave-game', async ({ joinCode, authToken }, callback) => {
     const room = joinCode.toUpperCase();
+    // Clear any pending disconnect timeout for this player
+    const timeoutKey = `${room}:${authToken}`;
+    if (disconnectTimeouts.has(timeoutKey)) {
+      clearTimeout(disconnectTimeouts.get(timeoutKey));
+      disconnectTimeouts.delete(timeoutKey);
+    }
     socket.leave(room);
     const updatedGame = await removePlayer(joinCode, authToken);
     if (updatedGame && updatedGame.players.length === 0) {
@@ -298,25 +334,36 @@ io.on('connection', (socket) => {
     if (typeof callback === 'function') callback();
   });
 
-  socket.on('disconnect', async () => {
+  socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     if (socket.joinCode && socket.authToken) {
-      const game = await findGame(socket.joinCode);
-      if (game && game.status === 'waiting' && game.ownerAuthToken === socket.authToken) {
-        const result = await transferOwner(socket.joinCode, socket.authToken);
-        if (result.success) {
-          console.log(`Owner transferred in game ${socket.joinCode} to ${result.newOwnerName}`);
-          io.to(socket.joinCode).emit('owner-changed', {
-            newOwnerAuthToken: result.newOwnerAuthToken,
-            newOwnerName: result.newOwnerName
-          });
+      const room = socket.joinCode;
+      const authToken = socket.authToken;
+      const timeoutKey = `${room}:${authToken}`;
+
+      console.log(`Starting 60s grace period for ${authToken} in ${room}`);
+      const timeoutId = setTimeout(async () => {
+        disconnectTimeouts.delete(timeoutKey);
+        console.log(`Grace period expired for ${authToken} in ${room}, removing player`);
+        const game = await findGame(room);
+        if (game && game.status === 'waiting' && game.ownerAuthToken === authToken) {
+          const result = await transferOwner(room, authToken);
+          if (result.success) {
+            console.log(`Owner transferred in game ${room} to ${result.newOwnerName}`);
+            io.to(room).emit('owner-changed', {
+              newOwnerAuthToken: result.newOwnerAuthToken,
+              newOwnerName: result.newOwnerName
+            });
+          }
         }
-      }
-      const updatedGame = await removePlayer(socket.joinCode, socket.authToken);
-      if (updatedGame && updatedGame.players.length === 0) {
-        await deleteGame(socket.joinCode);
-        console.log(`Game ${socket.joinCode} deleted (last player disconnected)`);
-      }
+        const updatedGame = await removePlayer(room, authToken);
+        if (updatedGame && updatedGame.players.length === 0) {
+          await deleteGame(room);
+          console.log(`Game ${room} deleted (last player disconnected)`);
+        }
+      }, 60000);
+
+      disconnectTimeouts.set(timeoutKey, timeoutId);
     }
   });
 });

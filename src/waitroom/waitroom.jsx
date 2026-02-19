@@ -51,6 +51,12 @@ export function Waitroom() {
 
         socket.emit('join-game', joinCode, authToken);
 
+        const handleReconnect = () => {
+            socket.emit('join-game', joinCode, authToken);
+        };
+
+        socket.on('connect', handleReconnect);
+
         socket.on('player-list-updated', () => {
             fetchPlayers();
         });
@@ -69,6 +75,7 @@ export function Waitroom() {
         });
 
         return () => {
+            socket.off('connect', handleReconnect);
             socket.off('player-list-updated');
             socket.off('game-started');
             socket.off('owner-changed');
