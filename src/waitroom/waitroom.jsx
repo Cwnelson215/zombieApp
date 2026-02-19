@@ -25,7 +25,18 @@ export function Waitroom() {
         setPlayers(data.players);
         setOwnerAuthToken(data.ownerAuthToken);
         setIsOwner(data.ownerAuthToken === authToken);
-    }, [joinCode, authToken]);
+
+        if (data.status === 'running') {
+            const firstInfected = data.players.find(p => p.status);
+            if (firstInfected) {
+                localStorage.setItem("firstInfectedAuthToken", firstInfected.authToken);
+                localStorage.setItem("firstInfectedName", firstInfected.name);
+            }
+            if (data.endTime) localStorage.setItem("endTime", data.endTime);
+            navigate(`/game/${joinCode}/running`);
+            return;
+        }
+    }, [joinCode, authToken, navigate]);
 
     useEffect(() => {
         requestNotificationPermission();

@@ -69,7 +69,7 @@ export function Running() {
     useEffect(() => {
         if (!socket || !joinCode) return;
 
-        socket.emit('join-game', joinCode);
+        socket.emit('join-game', joinCode, authToken);
 
         const handlePlayerInfected = ({ playerName, newStatus, authToken: changedAuthToken }) => {
             setPlayers(prev => prev.map(p =>
