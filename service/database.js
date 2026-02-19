@@ -164,7 +164,7 @@ export async function startGame(joinCode, authToken) {
     }
     const randomIndex = Math.floor(Math.random() * game.players.length);
     const firstInfected = game.players[randomIndex];
-    const endTime = Date.now() + game.timer * 60 * 1000;
+    const endTime = game.timer > 0 ? Date.now() + game.timer * 60 * 1000 : 0;
     await gameCollection.updateOne(
         { joinCode: joinCode, "players.authToken": firstInfected.authToken },
         {

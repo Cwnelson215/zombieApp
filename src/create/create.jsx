@@ -32,7 +32,7 @@ export function Create() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                timer: minutes
+                timer: checkboxY ? 0 : minutes
             })
         });
         res = await res.json()
