@@ -35,6 +35,29 @@ const io = new Server(httpServer, {
 const authCookieName = 'token';
 const fontendPath = 'public';
 
+// Input validation helpers
+function isValidJoinCode(code) {
+  return typeof code === 'string' && /^[A-Za-z0-9]{6}$/.test(code);
+}
+
+function isValidAuthToken(token) {
+  return typeof token === 'string' && token.length >= 4 && token.length <= 16 && /^[A-Za-z0-9_-]+$/.test(token);
+}
+
+function isValidNickname(name) {
+  if (typeof name !== 'string') return false;
+  const trimmed = name.trim();
+  return trimmed.length >= 1 && trimmed.length <= 20;
+}
+
+function isValidProfilePicture(pic) {
+  return Number.isInteger(pic) && pic >= 1 && pic <= 3;
+}
+
+function isValidTimer(timer) {
+  return Number.isInteger(timer) && (timer === 0 || (timer >= 5 && timer <= 90));
+}
+
 // The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
 const disconnectTimeouts = new Map(); // "joinCode:authToken" -> timeoutId
@@ -71,7 +94,11 @@ const verifyAuth = async (req, res, next) => {
 };
 
 apiRouter.post('/game/create', async (req, res) => {
-    const game = await createGame(req.body.timer);
+    const timer = req.body.timer;
+    if (!isValidTimer(timer)) {
+      return res.status(400).json({ error: 'Timer must be 0 (no timer) or between 5 and 90 minutes' });
+    }
+    const game = await createGame(timer);
     res.json({
         joinCode: game.joinCode,
         ownerAuthToken: game.ownerAuthToken,
@@ -79,12 +106,22 @@ apiRouter.post('/game/create', async (req, res) => {
 });
 
 apiRouter.post('/player/add', async (req, res) => {
-    const game = await findGame(req.body.joinCode);
+    const { joinCode, nickname, profilePicture, ownerAuthToken } = req.body;
+    if (!isValidJoinCode(joinCode)) {
+      return res.status(400).json({ error: 'Join code must be exactly 6 alphanumeric characters' });
+    }
+    if (!isValidNickname(nickname)) {
+      return res.status(400).json({ error: 'Nickname must be 1-20 characters' });
+    }
+    if (!isValidProfilePicture(profilePicture)) {
+      return res.status(400).json({ error: 'Profile picture must be 1, 2, or 3' });
+    }
+    const game = await findGame(joinCode);
     if (!game) {
         res.status(404).send({ msg: 'Game not found' });
         return;
     }
-    const player = await addPlayer(req.body.joinCode, req.body.nickname, req.body.profilePicture, req.body.ownerAuthToken);
+    const player = await addPlayer(joinCode, nickname.trim(), profilePicture, ownerAuthToken);
     if (player.error) {
         res.status(400).send({ msg: player.error });
         return;
@@ -97,8 +134,10 @@ apiRouter.post('/player/add', async (req, res) => {
 });
 
 apiRouter.post('/game/check' , async (req, res) => {
+  if (!isValidJoinCode(req.body.joinCode)) {
+    return res.status(400).json({ error: 'Join code must be exactly 6 alphanumeric characters' });
+  }
   const game = await findGame(req.body.joinCode);
-  console.log(game)
   res.status(200).json({
     gameFound: !!game,
   });
@@ -118,6 +157,9 @@ apiRouter.post('/player/session', async (req, res) => {
 });
 
 apiRouter.post('/game/getPlayers', async (req, res) => {
+  if (!isValidJoinCode(req.body.joinCode)) {
+    return res.status(400).json({ error: 'Join code must be exactly 6 alphanumeric characters' });
+  }
   const game = await findGame(req.body.joinCode)
   if(!game){
     res.status(404).send({ msg: 'Game not found' });
@@ -134,8 +176,11 @@ apiRouter.post('/game/getPlayers', async (req, res) => {
 
 apiRouter.post('/game/start', async (req, res) => {
   const { joinCode, authToken } = req.body;
-  if (!joinCode || !authToken) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  if (!isValidJoinCode(joinCode)) {
+    return res.status(400).json({ error: 'Join code must be exactly 6 alphanumeric characters' });
+  }
+  if (!isValidAuthToken(authToken)) {
+    return res.status(400).json({ error: 'Invalid auth token' });
   }
   const result = await startGame(joinCode, authToken);
   if (result.error) {
@@ -158,15 +203,18 @@ apiRouter.get('/push/vapidPublicKey', (req, res) => {
 // Subscribe to push notifications
 apiRouter.post('/push/subscribe', async (req, res) => {
   const { joinCode, authToken, subscription } = req.body;
-  console.log('[Push] Subscribe request:', { joinCode, authToken, hasSubscription: !!subscription });
 
-  if (!joinCode || !authToken || !subscription) {
-    console.log('[Push] Missing required fields');
-    return res.status(400).json({ error: 'Missing required fields' });
+  if (!isValidJoinCode(joinCode)) {
+    return res.status(400).json({ error: 'Join code must be exactly 6 alphanumeric characters' });
+  }
+  if (!isValidAuthToken(authToken)) {
+    return res.status(400).json({ error: 'Invalid auth token' });
+  }
+  if (!subscription || typeof subscription !== 'object' || !subscription.endpoint) {
+    return res.status(400).json({ error: 'Invalid push subscription' });
   }
 
   const success = await savePushSubscription(joinCode, authToken, subscription);
-  console.log('[Push] Subscription saved:', success);
 
   if (success) {
     res.json({ success: true });
@@ -178,8 +226,11 @@ apiRouter.post('/push/subscribe', async (req, res) => {
 // Unsubscribe from push notifications
 apiRouter.post('/push/unsubscribe', async (req, res) => {
   const { joinCode, authToken } = req.body;
-  if (!joinCode || !authToken) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  if (!isValidJoinCode(joinCode)) {
+    return res.status(400).json({ error: 'Join code must be exactly 6 alphanumeric characters' });
+  }
+  if (!isValidAuthToken(authToken)) {
+    return res.status(400).json({ error: 'Invalid auth token' });
   }
 
   const success = await removePushSubscription(joinCode, authToken);
@@ -267,10 +318,10 @@ io.on('connection', (socket) => {
     if (disconnectTimeouts.has(timeoutKey)) {
       clearTimeout(disconnectTimeouts.get(timeoutKey));
       disconnectTimeouts.delete(timeoutKey);
-      console.log(`Reconnect: cancelled disconnect timeout for ${authToken} in ${room}`);
+      console.log(`Reconnect: cancelled disconnect timeout in ${room}`);
     }
 
-    console.log(`Socket ${socket.id} joined game room: ${room} with authToken: ${authToken}`);
+    console.log(`Socket ${socket.id} joined game room: ${room}`);
   });
 
   socket.on('infection-update', async ({ joinCode, authToken, newStatus }) => {
@@ -282,7 +333,7 @@ io.on('connection', (socket) => {
         newStatus: newStatus,
         authToken: authToken
       });
-      console.log(`Player ${player.name} infection status changed to ${newStatus} in game ${room}`);
+      console.log(`Infection status updated in game ${room}`);
 
       // Send push notifications to other players
       const statusText = newStatus ? 'infected' : 'cured';
@@ -343,15 +394,15 @@ io.on('connection', (socket) => {
       const authToken = socket.authToken;
       const timeoutKey = `${room}:${authToken}`;
 
-      console.log(`Starting 60s grace period for ${authToken} in ${room}`);
+      console.log(`Starting 60s grace period for player in ${room}`);
       const timeoutId = setTimeout(async () => {
         disconnectTimeouts.delete(timeoutKey);
-        console.log(`Grace period expired for ${authToken} in ${room}, removing player`);
+        console.log(`Grace period expired for player in ${room}, removing player`);
         const game = await findGame(room);
         if (game && game.status === 'waiting' && game.ownerAuthToken === authToken) {
           const result = await transferOwner(room, authToken);
           if (result.success) {
-            console.log(`Owner transferred in game ${room} to ${result.newOwnerName}`);
+            console.log(`Owner transferred in game ${room}`);
             io.to(room).emit('owner-changed', {
               newOwnerAuthToken: result.newOwnerAuthToken,
               newOwnerName: result.newOwnerName

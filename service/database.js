@@ -1,12 +1,10 @@
 import { MongoClient } from "mongodb";
-import { readFileSync } from "fs";
+import { randomBytes } from "crypto";
 
-let url;
-if (process.env.MONGODB_URI) {
-  url = process.env.MONGODB_URI;
-} else {
-  const config = JSON.parse(readFileSync('./dbConfig.json', 'utf-8'));
-  url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+const url = process.env.MONGODB_URI;
+if (!url) {
+  console.error("MONGODB_URI environment variable is not set");
+  process.exit(1);
 }
 const client = new MongoClient(url);
 const db = client.db('infect');
@@ -18,7 +16,7 @@ const gameCollection = db.collection('games');
         await db.command({ ping: 1});
         console.log(`Connected to database`);
     }   catch(ex) {
-        console.log(`Unable to connect to database with ${url} because ${ex.message}`)
+        console.log(`Unable to connect to database: ${ex.message}`)
         process.exit(1);
     }
 })();
@@ -118,18 +116,12 @@ function generateJoinCode() {
 }
 
 function generateAuthToken() {
-    const characters = '0123456789';
-    let token = '';
-    for (let i = 0; i < 4; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        token += characters[randomIndex];
-    }
-    return token
+    return randomBytes(6).toString('base64url').substring(0, 8);
 }
 
 export async function savePushSubscription(joinCode, authToken, subscription) {
     joinCode = joinCode.toUpperCase();
-    console.log('[DB] Saving push subscription for:', joinCode, authToken);
+    console.log('[DB] Saving push subscription for game:', joinCode);
     const result = await gameCollection.updateOne(
         { joinCode: joinCode, "players.authToken": authToken },
         { $set: { "players.$.pushSubscription": subscription } }
@@ -216,7 +208,7 @@ export async function findGameByPlayerAuth(authToken) {
 
 export async function getPushSubscriptionsForGame(joinCode, excludeAuthToken) {
     joinCode = joinCode.toUpperCase();
-    console.log('[DB] Getting push subscriptions for game:', joinCode, 'excluding:', excludeAuthToken);
+    console.log('[DB] Getting push subscriptions for game:', joinCode);
     const game = await gameCollection.findOne({ joinCode: joinCode });
     if (!game) {
         console.log('[DB] Game not found');
