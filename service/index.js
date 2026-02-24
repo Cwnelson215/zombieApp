@@ -2,6 +2,7 @@ import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,6 +23,7 @@ if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 }
 
 const app = express();
+app.set('trust proxy', 1);
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -58,6 +60,49 @@ function isValidTimer(timer) {
   return Number.isInteger(timer) && (timer === 0 || (timer >= 5 && timer <= 90));
 }
 
+// HTTP rate limiters
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const gameCheckLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 15,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const gameCreateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Socket rate limiter
+function createSocketRateLimiter(maxPerWindow, windowMs) {
+  const counts = new Map();
+  return function isAllowed(socketId) {
+    const now = Date.now();
+    const entry = counts.get(socketId);
+    if (!entry || now > entry.resetTime) {
+      counts.set(socketId, { count: 1, resetTime: now + windowMs });
+      return true;
+    }
+    entry.count++;
+    return entry.count <= maxPerWindow;
+  };
+}
+const socketLimiter = createSocketRateLimiter(30, 10000);
+
+// Socket identity verification
+function verifySocketIdentity(socket, authToken) {
+  return socket.authToken && socket.authToken === authToken;
+}
+
 // The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
 const disconnectTimeouts = new Map(); // "joinCode:authToken" -> timeoutId
@@ -81,7 +126,7 @@ app.get('/health', (req, res) => {
 
 // Router for service endpoints
 var apiRouter = express.Router();
-app.use(`/api`, apiRouter);
+app.use('/api', apiLimiter, apiRouter);
 
 // Middleware to verify that the user is authorized to call an endpoint
 const verifyAuth = async (req, res, next) => {
@@ -93,7 +138,7 @@ const verifyAuth = async (req, res, next) => {
   }
 };
 
-apiRouter.post('/game/create', async (req, res) => {
+apiRouter.post('/game/create', gameCreateLimiter, async (req, res) => {
     const timer = req.body.timer;
     if (!isValidTimer(timer)) {
       return res.status(400).json({ error: 'Timer must be 0 (no timer) or between 5 and 90 minutes' });
@@ -133,7 +178,7 @@ apiRouter.post('/player/add', async (req, res) => {
     });
 });
 
-apiRouter.post('/game/check' , async (req, res) => {
+apiRouter.post('/game/check', gameCheckLimiter, async (req, res) => {
   if (!isValidJoinCode(req.body.joinCode)) {
     return res.status(400).json({ error: 'Join code must be exactly 6 alphanumeric characters' });
   }
@@ -307,8 +352,19 @@ function setAuthCookie(res, authToken) {
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
-  socket.on('join-game', (joinCode, authToken) => {
+  // Socket-level rate limiting
+  socket.use((packet, next) => {
+    if (!socketLimiter(socket.id)) {
+      return next(new Error('Rate limit exceeded'));
+    }
+    next();
+  });
+
+  socket.on('join-game', async (joinCode, authToken) => {
+    if (!isValidJoinCode(joinCode) || !isValidAuthToken(authToken)) return;
     const room = joinCode.toUpperCase();
+    const game = await findGame(joinCode);
+    if (!game || !game.players.some(p => p.authToken === authToken)) return;
     socket.join(room);
     socket.joinCode = room;
     socket.authToken = authToken;
@@ -325,6 +381,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('infection-update', async ({ joinCode, authToken, newStatus }) => {
+    if (!isValidJoinCode(joinCode) || !isValidAuthToken(authToken)) return;
+    if (typeof newStatus !== 'boolean') return;
+    if (!verifySocketIdentity(socket, authToken)) return;
     const room = joinCode.toUpperCase();
     const player = await updatePlayerStatus(joinCode, authToken, newStatus);
     if (player) {
@@ -347,10 +406,14 @@ io.on('connection', (socket) => {
   });
 
   socket.on('player-joined', (joinCode) => {
+    if (!socket.authToken) return;
+    if (!isValidJoinCode(joinCode)) return;
     socket.to(joinCode.toUpperCase()).emit('player-list-updated');
   });
 
   socket.on('end-game', async ({ joinCode, authToken }) => {
+    if (!isValidJoinCode(joinCode) || !isValidAuthToken(authToken)) return;
+    if (!verifySocketIdentity(socket, authToken)) return;
     const room = joinCode.toUpperCase();
     const game = await findGame(joinCode);
     if (game && game.ownerAuthToken === authToken) {
@@ -369,6 +432,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leave-game', async ({ joinCode, authToken }, callback) => {
+    if (!isValidJoinCode(joinCode) || !isValidAuthToken(authToken)) return;
+    if (!verifySocketIdentity(socket, authToken)) return;
     const room = joinCode.toUpperCase();
     // Clear any pending disconnect timeout for this player
     const timeoutKey = `${room}:${authToken}`;
