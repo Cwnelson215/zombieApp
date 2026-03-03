@@ -320,12 +320,12 @@ const service = new aws.ecs.Service(`${appName}-service`, {
         {
           capacityProvider: "FARGATE_SPOT",
           weight: 1,
-          base: 0,
+          base: 1,
         },
         {
           capacityProvider: "FARGATE",
           weight: 0,
-          base: 1,
+          base: 0,
         },
       ]
     : undefined,
